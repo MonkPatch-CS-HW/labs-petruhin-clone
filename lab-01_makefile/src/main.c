@@ -5,7 +5,6 @@
 int doComputation(int, int);
 
 // int main() {}
-
 // int run() // instead of int main()
 int main()
 {
@@ -15,3 +14,6 @@ int main()
   logDebug('!');
   return 0;
 }
+
+// int a = 5;
+// int a = 6;
