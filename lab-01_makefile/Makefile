@@ -11,6 +11,7 @@ $(EXECUTABLE): $(OBJECT)
 	$(CC) $(CFLAGS) $(OBJECT) -o $(EXECUTABLE)
 
 obj/%.o: src/%.c $(HEADERS)
+	@mkdir -p obj
 	$(CC) -c $(CFLAGS) $< -o $@
 
 clean:
