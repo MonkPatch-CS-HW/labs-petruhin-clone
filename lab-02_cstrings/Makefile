@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Iinclude -Wall -Wextra -Werror
-HEADERS=$(wildcard include/*)
-SOURCE=$(wildcard src/*)
+HEADERS=$(wildcard include/*.h)
+SOURCE=$(wildcard src/*.c)
 OBJECT=$(patsubst src/%,obj/%,$(SOURCE:.c=.o))
 EXECUTABLE=lab-02_cstrings
 
