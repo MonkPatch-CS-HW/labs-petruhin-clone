@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "str.h"
+#include "test_str.h"
 
 void test_my_strcpy()
 {
