@@ -55,15 +55,15 @@ void test_my_strcmp()
   assert(my_strcmp(str11, str12) == 0);
   assert(my_strcmp(str21, str22) == 0);
 
-  assert(my_strcmp(str01, str11) == -1);
-  assert(my_strcmp(str12, str13) == -1);
-  assert(my_strcmp(str22, str13) == -1);
-  assert(my_strcmp(str12, str21) == -1);
-  assert(my_strcmp(str12, str23) == -1);
+  assert(my_strcmp(str01, str11) < 0);
+  assert(my_strcmp(str12, str13) < 0);
+  assert(my_strcmp(str22, str13) < 0);
+  assert(my_strcmp(str12, str21) < 0);
+  assert(my_strcmp(str12, str23) < 0);
 
-  assert(my_strcmp(str11, str01) == 1);
-  assert(my_strcmp(str13, str12) == 1);
-  assert(my_strcmp(str13, str22) == 1);
-  assert(my_strcmp(str21, str12) == 1);
-  assert(my_strcmp(str23, str12) == 1);
+  assert(my_strcmp(str11, str01) > 0);
+  assert(my_strcmp(str13, str12) > 0);
+  assert(my_strcmp(str13, str22) > 0);
+  assert(my_strcmp(str21, str12) > 0);
+  assert(my_strcmp(str23, str12) > 0);
 }

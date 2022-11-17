@@ -20,14 +20,12 @@ char *my_strcat(char *destination, const char *source)
 
 int my_strcmp(const char *str1, const char *str2)
 {
-  do
+  while ((*str1 == *str2) && *str1)
   {
-    if (*str1 < *str2)
-      return -1;
-    if (*str1 > *str2)
-      return 1;
-  } while ((*str1++ && *str2++));
-  return 0;
+    str1++;
+    str2++;
+  }
+  return *str1 - *str2;
 }
 
 size_t my_strlen(const char *str)
