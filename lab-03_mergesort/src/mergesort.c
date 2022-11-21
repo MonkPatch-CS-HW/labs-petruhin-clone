@@ -18,20 +18,12 @@ void merge(
 
   while (l < pivot || r < end)
   {
-    if ((l < pivot && r == end) || (l < pivot && comparator(l, r) <= 0))
-    {
-      memcpy(o, l, element_size);
-      l = (char *)l + element_size;
-    }
-    else if ((l == pivot && r < end) || (r < end && comparator(l, r) >= 0))
-    {
-      memcpy(o, r, element_size);
-      r = (char *)r + element_size;
-    }
-    o = (char *)o + element_size;
+    int append_l = l < pivot && (r >= end || comparator(l, r) <= 0);
+    void **part = append_l ? &l : &r;
+    for (size_t i = 0; i < element_size; i++)
+      *(char*)o++ = *(char*)(*part)++;
   }
   memcpy(array, out, element_size * elements);
-
   free(out);
 }
 
@@ -45,6 +37,5 @@ void mergesort(
   size_t mid = elements / 2;
   mergesort(array, mid, element_size, comparator);
   mergesort((char *)array + mid * element_size, elements - mid, element_size, comparator);
-
   merge(array, mid, elements, element_size, comparator);
 }

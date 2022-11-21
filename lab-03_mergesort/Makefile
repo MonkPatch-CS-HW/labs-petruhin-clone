@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Iinclude -Wall -Wextra 
+CFLAGS=-Iinclude -Wall -Wextra
 HEADERS=$(wildcard include/*)
 SOURCE=$(wildcard src/*)
 OBJECT=$(patsubst src/%,obj/%,$(SOURCE:.c=.o))
