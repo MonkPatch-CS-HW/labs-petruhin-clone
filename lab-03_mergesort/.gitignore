@@ -1,6 +1,9 @@
 # This lab:
 /lab-03_mergesort
 
+# Tests
+/test
+
 # General build directories:
 # - for Makefile:
 /obj/
