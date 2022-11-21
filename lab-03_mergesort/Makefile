@@ -1,10 +1,12 @@
 CC=gcc
-CFLAGS=-Iinclude -Wall -Wextra
+CFLAGS=-Iinclude -Wall -Wextra -Werror
 HEADERS=$(wildcard include/*)
 SOURCE=$(filter-out src/main.c src/test.c, $(wildcard src/*))
 OBJECT=$(patsubst src/%,obj/%,$(SOURCE:.c=.o))
 EXECUTABLE=lab-03_mergesort
 TEST_EXECUTABLE=test
+
+all: $(EXECUTABLE) $(TEST_EXECUTABLE)
 
 $(EXECUTABLE): obj/main.o $(OBJECT)
 	$(CC) $(CFLAGS) $^ -o $(EXECUTABLE)
