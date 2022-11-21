@@ -76,6 +76,13 @@ int main(int argc, char **argv)
     printf("incorrect usage\n");
     return 2;
   }
+  
+  if (argc == 2)
+  {
+    printf("\n");
+    return 0;
+  }
+
   int res = 0;
   if (strcmp(argv[1], "int") == 0)
     res = process_int(argc, argv);
