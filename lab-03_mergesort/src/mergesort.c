@@ -3,30 +3,39 @@
 #include <stdio.h>
 #include "mergesort.h"
 
+void my_memcpy(void *dest, void *src, size_t n)
+{
+  char *d = (char *)dest;
+  char *s = (char *)src;
+  while (n--)
+    *d++ = *s++;
+}
+
 int merge(
     void *array,
-    size_t mid,
+    size_t pivot_index,
     size_t elements, size_t element_size,
     int (*comparator)(const void *, const void *))
 {
   if (elements <= 1)
     return 0;
-  void *pivot = (char *)array + element_size * mid;
-  void *end = (char *)array + element_size * elements;
-  void *out = malloc(elements * element_size);
-  if (out == NULL)
+  void *arr_pivot = (char *)array + element_size * pivot_index;
+  void *arr_end = (char *)array + element_size * elements;
+  void *out_arr = malloc(elements * element_size);
+  if (out_arr == NULL)
     return -1;
-  void *l = array, *r = pivot, *o = out;
+  void *l = array, *r = arr_pivot, *out_ptr = out_arr;
 
-  while (l < pivot || r < end)
+  while (l < arr_pivot || r < arr_end)
   {
-    int append_l = l < pivot && (r >= end || comparator(l, r) <= 0);
+    int append_l = l < arr_pivot && (r >= arr_end || comparator(l, r) <= 0);
     void **part = append_l ? &l : &r;
-    for (size_t i = 0; i < element_size; i++)
-      *(char *)o++ = *(char *)(*part)++;
+    my_memcpy(out_ptr, *part, element_size);
+    out_ptr = (char *)out_ptr + element_size;
+    *part = *(char **)part + element_size;
   }
-  memcpy(array, out, element_size * elements);
-  free(out);
+  my_memcpy(array, out_arr, element_size * elements);
+  free(out_arr);
   return 0;
 }
 
