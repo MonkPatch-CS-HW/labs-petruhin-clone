@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Iinclude -Wall -Wextra -Werror
+CFLAGS=-Iinclude -Wall -Wextra -Werror --pedantic-errors
 HEADERS=$(wildcard include/*)
 SOURCE=$(filter-out src/main.c src/test.c, $(wildcard src/*))
 OBJECT=$(patsubst src/%,obj/%,$(SOURCE:.c=.o))
