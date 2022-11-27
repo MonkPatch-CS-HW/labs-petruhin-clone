@@ -16,7 +16,7 @@ typedef struct intrusive_list {
 
 void init_list(intrusive_list_t *list);
 void add_node(intrusive_list_t *list, intrusive_node_t *node);
-void remove_node(intrusive_node_t *node);
+void remove_node(intrusive_list_t *list, intrusive_node_t *node);
 
 void uninit_list(intrusive_list_t *list);
 
