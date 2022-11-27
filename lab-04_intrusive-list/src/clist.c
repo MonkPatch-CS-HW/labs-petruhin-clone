@@ -24,8 +24,13 @@ void add_node(intrusive_list_t *list, intrusive_node_t *node)
   list->head->next = node;
 }
 
-void remove_node(intrusive_node_t *node)
+void remove_node(intrusive_list_t *list, intrusive_node_t *node)
 {
+  intrusive_node_t *current = list->head;
+  while ((current = current->next) && current != node)
+    ;
+  if (!current)
+    return;
   if (node->next)
     node->next->prev = node->prev;
   if (node->prev)

@@ -29,7 +29,7 @@ void remove_point(intrusive_list_t *list, int x, int y)
       current = current->next;
       continue;
     }
-    remove_node(current->next);
+    remove_node(list, current->next);
     free(point);
   }
 }
@@ -53,7 +53,7 @@ void remove_all_points(intrusive_list_t *list)
   while (current->next)
   {
     point_t *point = container_of(current->next, point_t, node);
-    remove_node(current->next);
+    remove_node(list, current->next);
     free(point);
   }
 }
