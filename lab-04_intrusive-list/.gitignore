@@ -1,0 +1,16 @@
+# This lab:
+/lab-04_intrusive-list
+
+# Tests
+/test
+
+# General build directories:
+# - for Makefile:
+/obj/
+# - for CMake, by default:
+/build/
+/_build/
+
+# CLion projects:
+/.idea/
+/cmake-build*/
