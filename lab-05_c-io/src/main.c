@@ -6,6 +6,18 @@
 
 #define UNUSED(x) (void)(x)
 
+int from_int24(int x)
+{
+  if (x & 0x800000)
+    return -(-x & 0xffffff);
+  return x & 0xffffff;
+}
+
+int to_int24(int x)
+{
+  return x & 0xffffff;
+}
+
 typedef struct list_container
 {
   FILE *file;
@@ -30,6 +42,8 @@ void read_binary_point_callback(intrusive_node_t *node, void *data)
   int res2 = fread(&y, sizeof(char), 3, ((list_container_t *)data)->file);
   if (res1 < 3 || res2 < 3)
     return;
+  x = from_int24(x);
+  y = from_int24(y);
   add_point_back(((list_container_t *)data)->list, x, y);
 }
 
@@ -42,8 +56,10 @@ void write_text_point_callback(intrusive_node_t *node, void *data)
 void write_binary_point_callback(intrusive_node_t *node, void *data)
 {
   point_t *point = container_of(node, point_t, node);
-  fwrite(&point->x, sizeof(char), 3, ((list_container_t *)data)->file);
-  fwrite(&point->y, sizeof(char), 3, ((list_container_t *)data)->file);
+  int x = to_int24(point->x);
+  int y = to_int24(point->y);
+  fwrite(&x, sizeof(char), 3, ((list_container_t *)data)->file);
+  fwrite(&y, sizeof(char), 3, ((list_container_t *)data)->file);
 }
 
 void print_callback(intrusive_node_t *node, void *data)
