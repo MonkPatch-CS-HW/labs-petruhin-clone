@@ -28,7 +28,7 @@ void read_binary_point_callback(intrusive_node_t *node, void *data)
   unsigned x, y;
   int res1 = fread(&x, sizeof(char), 3, ((list_container_t *)data)->file);
   int res2 = fread(&y, sizeof(char), 3, ((list_container_t *)data)->file);
-  if (res1 < 3 || res2 < 3)
+  if (res1 == 0 && res2 == 0)
     return;
   add_point_back(((list_container_t *)data)->list, x, y);
 }
