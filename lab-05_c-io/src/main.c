@@ -8,12 +8,9 @@
 
 int from_int24(int x)
 {
-  // if 24th bit set to 1, then
-  // reverse (= set to 1) all bits to the left of the lower 24 bits
   if (x & 0x800000)
-    // return ~(~x & 0xffffff);
-    return x | (-1 << 24);
-  return x;
+    return ~(~x & 0xffffff);
+  return x & 0xffffff;
 }
 
 int to_int24(int x)
