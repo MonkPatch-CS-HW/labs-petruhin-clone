@@ -15,8 +15,8 @@ typedef struct list_container
 void read_text_point_callback(intrusive_node_t *node, void *data)
 {
   UNUSED(node);
-  int x, y;
-  int res = fscanf(((list_container_t *)data)->file, "%d %d\n", &x, &y);
+  unsigned x, y;
+  int res = fscanf(((list_container_t *)data)->file, "%u %u\n", &x, &y);
   if (res < 2)
     return;
   add_point_back(((list_container_t *)data)->list, x, y);
@@ -25,7 +25,7 @@ void read_text_point_callback(intrusive_node_t *node, void *data)
 void read_binary_point_callback(intrusive_node_t *node, void *data)
 {
   UNUSED(node);
-  int x = 0, y = 0;
+  unsigned x, y;
   int res1 = fread(&x, sizeof(char), 3, ((list_container_t *)data)->file);
   int res2 = fread(&y, sizeof(char), 3, ((list_container_t *)data)->file);
   if (res1 < 3 || res2 < 3)
