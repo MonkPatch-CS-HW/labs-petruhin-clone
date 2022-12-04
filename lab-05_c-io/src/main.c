@@ -9,7 +9,7 @@
 int from_int24(int x)
 {
   if (x & 0x800000)
-    return ~(~x & 0xffffff);
+    return x | ~0xffffff;
   return x & 0xffffff;
 }
 
