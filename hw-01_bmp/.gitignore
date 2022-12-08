@@ -1,5 +1,7 @@
 /build/
 /_build/
 
+/obj/
+
 /bin/
 /hw-01_bmp
