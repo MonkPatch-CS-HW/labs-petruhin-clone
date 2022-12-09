@@ -162,9 +162,9 @@ int _extract_fp(bmp_picture_t *bmp, FILE *kfp, FILE *mfp)
 int close_files(FILE *kfp, FILE *mfp)
 {
   int res = 0;
-  if (fclose(kfp) != 0)
+  if (kfp != NULL && fclose(kfp) != 0)
     res = -3;
-  if (fclose(mfp) != 0)
+  if (mfp != NULL && fclose(mfp) != 0)
     res = -4;
   return res;
 }
