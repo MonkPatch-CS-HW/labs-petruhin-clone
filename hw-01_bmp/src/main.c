@@ -4,12 +4,6 @@
 #include <stddef.h>
 #include "bmp.h"
 
-typedef enum process_cmd_status
-{
-  PROCESS_CMD_SUCCESS,
-  PROCESS_CMD_INCORRECT_USAGE,
-} process_cmd_status_t;
-
 void process_crop_rotate(bmp_picture_t *bmp, char *infile, char *outfile, int x, int y, int w, int h)
 {
   int res;
@@ -32,6 +26,8 @@ void process_crop_rotate(bmp_picture_t *bmp, char *infile, char *outfile, int x,
     return;
   }
 
+  printf("byte_size=%d\n", bmp->header.bf_size);
+
   if ((res = save_bmp(outfile, bmp)) != 0)
   {
     printf("saving bmp failed, error code: %d\n", res);
@@ -39,15 +35,20 @@ void process_crop_rotate(bmp_picture_t *bmp, char *infile, char *outfile, int x,
   }
 }
 
-process_cmd_status_t process_cmd(int argc, char **argv, bmp_picture_t *bmp)
+/**
+ * Return codes:
+ * 0 on success,
+ * -1 on incorrect usage
+*/
+int process_cmd(int argc, char **argv, bmp_picture_t *bmp)
 {
   if (argc < 2)
-    return PROCESS_CMD_INCORRECT_USAGE;
+    return -1;
 
   if (strcmp(argv[1], "crop-rotate") == 0)
   {
     if (argc < 8)
-      return PROCESS_CMD_INCORRECT_USAGE;
+      return -1;
     char *infile = argv[2];
     char *outfile = argv[3];
     int x = atoi(argv[4]);
@@ -57,7 +58,7 @@ process_cmd_status_t process_cmd(int argc, char **argv, bmp_picture_t *bmp)
     process_crop_rotate(bmp, infile, outfile, x, y, w, h);
   }
 
-  return PROCESS_CMD_SUCCESS;
+  return 0;
 }
 
 int main(int argc, char **argv)
