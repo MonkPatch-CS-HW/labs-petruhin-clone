@@ -51,6 +51,8 @@ int make_of_size(bmp_picture_t *bmp, int width, int height, bmp_picture_t *bkp)
 int read_bmp(FILE *fp, bmp_picture_t *bmp)
 {
   int res = 0;
+  bmp->raw_data = NULL;
+  bmp->pixel_data = NULL;
 
   if ((res = fread(&bmp->header, sizeof(bmp_header_t), 1, fp)) != 1)
     return -2;
