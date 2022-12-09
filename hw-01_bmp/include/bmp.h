@@ -43,43 +43,11 @@ typedef struct bmp_picture
   int lines_count;
 } bmp_picture_t;
 
-typedef enum load_bmp_status
-{
-  LOAD_BMP_SUCCESS,
-  LOAD_BMP_ERR_OPEN,
-  LOAD_BMP_ERR_READ,
-  LOAD_BMP_ERR_ALLOC,
-  LOAD_BMP_ERR_SEEK,
-} load_bmp_status_t;
-
-typedef enum save_bmp_status
-{
-  SAVE_BMP_SUCCESS,
-  SAVE_BMP_ERR_OPEN,
-  SAVE_BMP_ERR_WRITE,
-  SAVE_BMP_ERR_SEEK,
-  SAVE_BMP_ERR_CLOSE,
-} save_bmp_status_t;
-
-typedef enum crop_status
-{
-  CROP_SUCCESS,
-  CROP_ERR_WRONG_ARG,
-  CROP_ERR_NO_FIT,
-  CROP_ERR_ALLOC,
-} crop_status_t;
-
-typedef enum rotate_status
-{
-  ROTATE_SUCCESS,
-  ROTATE_ERR_ALLOC,
-} rotate_status_t;
-
 int padd(int x);
-load_bmp_status_t load_bmp(char *filepath, bmp_picture_t *bmp);
-crop_status_t crop(bmp_picture_t *bmp, int x, int y, int w, int h);
-rotate_status_t rotate(bmp_picture_t *bmp);
-save_bmp_status_t save_bmp(char *filepath, bmp_picture_t *bmp);
+int load_bmp(char *filepath, bmp_picture_t *bmp);
+int crop(bmp_picture_t *bmp, int x, int y, int w, int h);
+int rotate(bmp_picture_t *bmp);
+int save_bmp(char *filepath, bmp_picture_t *bmp);
 void unload_bmp(bmp_picture_t *bmp);
 
 #endif // BMP_H
