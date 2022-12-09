@@ -129,7 +129,7 @@ int rotate(bmp_picture_t *bmp)
 {
 
   bmp_picture_t bkp;
-  if (make_of_size(bmp, bmp->info.bi_width, bmp->info.bi_height, &bkp) != 0)
+  if (make_of_size(bmp, bmp->info.bi_height, bmp->info.bi_width, &bkp) != 0)
     return -3;
 
   for (int r = 0; r < bmp->info.bi_height; r++)
