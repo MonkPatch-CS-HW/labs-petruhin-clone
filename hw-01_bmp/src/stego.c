@@ -124,7 +124,7 @@ int _insert_fp(bmp_picture_t *bmp, FILE *kfp, FILE *mfp)
 {
   int res;
   char c;
-  while ((res = fread(&c, sizeof(char), 1, mfp)) == 1)
+  while ((res = fscanf(mfp, "%c", &c)) == 1)
     if (insert_char(bmp, kfp, c) != 0)
       return -5;
   insert_char(bmp, kfp, '\0');
