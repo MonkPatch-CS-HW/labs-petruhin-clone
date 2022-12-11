@@ -5,61 +5,68 @@
 #include "point_list.h"
 
 #define UNUSED(x) (void)(x)
+#define BIT_24 0x800000
+#define BITS_24 0xffffff
+#define BITS_HIGHER_THAN_24 ~BITS_24
 
 int from_int24(int x)
 {
-  if (x & 0x800000)
-    return x | ~0xffffff;
-  return x & 0xffffff;
+  if (x & BIT_24)
+    return x | BITS_HIGHER_THAN_24;
+  return x & BITS_24;
 }
 
 int to_int24(int x)
 {
-  return x & 0xffffff;
+  return x & BITS_24;
 }
 
-typedef struct list_container
+typedef struct callback_param
 {
   FILE *file;
   intrusive_list_t *list;
-} list_container_t;
+} callback_param_t;
 
 void read_text_point_callback(intrusive_node_t *node, void *data)
 {
   UNUSED(node);
+  callback_param_t *param = (callback_param_t *)data;
   int x, y;
-  int res = fscanf(((list_container_t *)data)->file, "%d %d\n", &x, &y);
+  int res = fscanf(param->file, "%d %d\n", &x, &y);
   if (res < 2)
     return;
-  add_point_back(((list_container_t *)data)->list, x, y);
+  add_point_back(param->list, x, y);
 }
 
 void read_binary_point_callback(intrusive_node_t *node, void *data)
 {
   UNUSED(node);
+  callback_param_t *param = (callback_param_t *)data;
   int x = 0, y = 0;
-  int res1 = fread(&x, sizeof(char), 3, ((list_container_t *)data)->file);
-  int res2 = fread(&y, sizeof(char), 3, ((list_container_t *)data)->file);
+  int res1 = fread(&x, sizeof(char), 3, param->file);
+  int res2 = fread(&y, sizeof(char), 3, param->file);
   if (res1 < 3 || res2 < 3)
     return;
   x = from_int24(x);
   y = from_int24(y);
-  add_point_back(((list_container_t *)data)->list, x, y);
+  add_point_back(param->list, x, y);
 }
 
 void write_text_point_callback(intrusive_node_t *node, void *data)
 {
+  callback_param_t *param = (callback_param_t *)data;
   point_t *point = container_of(node, point_t, node);
-  fprintf(((list_container_t *)data)->file, "%d %d\n", point->x, point->y);
+  fprintf(param->file, "%d %d\n", point->x, point->y);
 }
 
 void write_binary_point_callback(intrusive_node_t *node, void *data)
 {
+  callback_param_t *param = (callback_param_t *)data;
   point_t *point = container_of(node, point_t, node);
   int x = to_int24(point->x);
   int y = to_int24(point->y);
-  fwrite(&x, sizeof(char), 3, ((list_container_t *)data)->file);
-  fwrite(&y, sizeof(char), 3, ((list_container_t *)data)->file);
+  fwrite(&x, sizeof(char), 3, param->file);
+  fwrite(&y, sizeof(char), 3, param->file);
 }
 
 void print_callback(intrusive_node_t *node, void *data)
@@ -86,7 +93,7 @@ int process_file_load(char *operation, char *infile, intrusive_list_t *list)
   FILE *file = fopen(infile, "r");
   if (file == NULL)
     return -2;
-  list_container_t c = {.file = file, .list = list};
+  callback_param_t c = {.file = file, .list = list};
   // temporary point for apply() to work
   add_point(list, __INT_MAX__, __INT_MAX__);
   apply(list, callback, &c);
@@ -123,7 +130,7 @@ int process_action(char *action, char **args, intrusive_list_t *list)
   FILE *file = fopen(args[0], "w");
   if (file == NULL)
     return -2;
-  list_container_t c = {.file = file, .list = list};
+  callback_param_t c = {.file = file, .list = list};
   apply(list, callback, &c);
   fclose(file);
   return 0;
