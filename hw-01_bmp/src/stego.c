@@ -82,6 +82,8 @@ char code_to_char(int c)
 int insert_char(bmp_picture_t *bmp, FILE *fp, char c)
 {
   int code = char_to_code(c);
+  if (code == 31)
+    return 0;
   int res, x, y;
   char chan;
   for (int i = 0; i < 5; i++)
