@@ -45,17 +45,17 @@ int char_to_code(char c)
 {
   switch (c)
   {
-  case '\0':
-    return 0;
   case ' ':
-    return 1;
+    return 26;
   case '.':
-    return 2;
+    return 27;
   case ',':
-    return 3;
+    return 28;
+  case '\0':
+    return 29;
   default:
     if ('A' <= c && c <= 'Z')
-      return 4 + c - 'A';
+      return c - 'A';
     return 31;
   }
 }
@@ -64,22 +64,28 @@ char code_to_char(int c)
 {
   switch (c)
   {
-  case 0:
-    return '\0';
-  case 1:
+  case 26:
     return ' ';
-  case 2:
+  case 27:
     return '.';
-  case 3:
+  case 28:
     return ',';
+  case 29:
+    return '\0';
   default:
-    if (4 <= c && c <= 4 + 'Z' - 'A')
-      return c - 4 + 'A';
+    if (0 <= c && c <= 'Z' - 'A')
+      return c + 'A';
     return '?';
   }
 }
 
-int insert_char(bmp_picture_t *bmp, FILE *fp, char c)
+/**
+ * Return codes:
+ * 0 on success,
+ * -1 on key chunk read error
+ * -2 on bit insertion error
+ */
+int insert_char(bmp_picture_t *bmp, FILE *kfp, char c)
 {
   int code = char_to_code(c);
   if (code == 31)
@@ -88,9 +94,10 @@ int insert_char(bmp_picture_t *bmp, FILE *fp, char c)
   char chan;
   for (int i = 0; i < 5; i++)
   {
-    if ((res = fscanf(fp, "%d %d %c", &x, &y, &chan)) != 3)
-      return 1;
-    set_bit(bmp, code & 1, x, y, chan);
+    if ((res = fscanf(kfp, "%d %d %c", &x, &y, &chan)) != 3)
+      return -1;
+    if ((res = set_bit(bmp, code & 1, x, y, chan)) != 0)
+      return -2;
     code >>= 1;
   }
   return 0;
@@ -100,8 +107,8 @@ int insert_char(bmp_picture_t *bmp, FILE *fp, char c)
  * Return codes:
  * 0 on success,
  * -1 on key chunk read error
-*/
-int extract_char(bmp_picture_t *bmp, FILE *fp, char *c)
+ */
+int extract_char(bmp_picture_t *bmp, FILE *kfp, char *c)
 {
   int code = 0;
   int res, x, y;
@@ -109,7 +116,7 @@ int extract_char(bmp_picture_t *bmp, FILE *fp, char *c)
   int base = 0;
   for (int i = 0; i < 5; i++)
   {
-    if ((res = fscanf(fp, "%d %d %c", &x, &y, &chan)) != 3)
+    if ((res = fscanf(kfp, "%d %d %c", &x, &y, &chan)) != 3)
       return -1;
     code |= get_bit(bmp, x, y, chan) << base++;
   }
@@ -140,7 +147,7 @@ int _insert_fp(bmp_picture_t *bmp, FILE *kfp, FILE *mfp)
 int _extract_fp(bmp_picture_t *bmp, FILE *kfp, FILE *mfp)
 {
   int res;
-  char c = 1;
+  char c;
   while (1)
   {
     if ((res = extract_char(bmp, kfp, &c)) != 0)
@@ -149,6 +156,8 @@ int _extract_fp(bmp_picture_t *bmp, FILE *kfp, FILE *mfp)
       break;
     fwrite(&c, sizeof(char), 1, mfp);
   }
+  c = '\n';
+  fwrite(&c, sizeof(char), 1, mfp);
   return 0;
 }
 
