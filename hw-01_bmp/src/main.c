@@ -116,6 +116,8 @@ int process_cmd(int argc, char **argv, bmp_picture_t *bmp)
       return -1;
     if (process_extract(bmp, argv[2], argv[3], argv[4]) != 0)
       return -2;
+  } else {
+    return -1;
   }
 
   return 0;
