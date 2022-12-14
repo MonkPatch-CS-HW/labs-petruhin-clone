@@ -36,7 +36,7 @@ int make_of_size(bmp_picture_t *bmp, int width, int height, bmp_picture_t *bkp)
     return -1;
 
   for (int i = 0; i < bmp->info.bi_height; i++)
-    bmp->pixel_data[bmp->info.bi_height - i - 1] = (pixel_data_t *)((char *)bmp->raw_data + i * bmp->line_width);
+    bmp->pixel_data[bmp->info.bi_height - i - 1] = (pixel_data_t *)(bmp->raw_data + i * bmp->line_width);
 
   return 0;
 }
@@ -114,7 +114,7 @@ int crop(bmp_picture_t *bmp, int x, int y, int w, int h)
 
   for (int r = 0; r < bmp->info.bi_height; r++)
     for (int c = 0; c < bmp->info.bi_width; c++)
-      bmp->pixel_data[r][c] = bkp.pixel_data[r + y][c + x];
+      (bmp->pixel_data[r])[c] = bkp.pixel_data[r + y][c + x];
 
   unload_bmp(&bkp);
   return 0;

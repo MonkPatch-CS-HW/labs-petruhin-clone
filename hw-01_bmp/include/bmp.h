@@ -37,10 +37,9 @@ typedef struct bmp_picture
 {
   bmp_header_t header;
   bmp_info_v3_t info;
-  pixel_data_t *raw_data;
+  char *raw_data;
   pixel_data_t **pixel_data;
   int line_width;
-  int lines_count;
 } bmp_picture_t;
 
 int padd(int x);
