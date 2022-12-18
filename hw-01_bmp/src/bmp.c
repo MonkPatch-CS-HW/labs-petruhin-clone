@@ -3,9 +3,13 @@
 #include <stdio.h>
 #include "bmp.h"
 
-int padd(int x)
+#define PADDING_BYTES 4
+#define BITS_IN_BYTE 8
+
+// least whole number divisible by k that is greater than x
+int padd(int x, int k)
 {
-  return (x + 3) - (x + 3) % 4;
+  return (x + k - 1) - (x + k - 1) % k;
 }
 
 /**
@@ -23,7 +27,8 @@ int make_of_size(bmp_picture_t *bmp, int width, int height, bmp_picture_t *bkp)
 
   bmp->info.bi_width = width;
   bmp->info.bi_height = height;
-  bmp->line_width = padd((bmp->info.bi_width * bmp->info.bi_bit_count) / 8);
+  int line_width_bits = padd(bmp->info.bi_width * bmp->info.bi_bit_count, PADDING_BYTES * BITS_IN_BYTE);
+  bmp->line_width = line_width_bits / BITS_IN_BYTE;
   bmp->info.bi_size_image = bmp->line_width * height;
   bmp->header.bf_size = bmp->header.bf_off_bits + bmp->info.bi_size_image;
 
@@ -114,7 +119,7 @@ int crop(bmp_picture_t *bmp, int x, int y, int w, int h)
 
   for (int r = 0; r < bmp->info.bi_height; r++)
     for (int c = 0; c < bmp->info.bi_width; c++)
-      (bmp->pixel_data[r])[c] = bkp.pixel_data[r + y][c + x];
+      bmp->pixel_data[r][c] = bkp.pixel_data[r + y][c + x];
 
   unload_bmp(&bkp);
   return 0;
@@ -127,10 +132,9 @@ int crop(bmp_picture_t *bmp, int x, int y, int w, int h)
  */
 int rotate(bmp_picture_t *bmp)
 {
-
   bmp_picture_t bkp;
   if (make_of_size(bmp, bmp->info.bi_height, bmp->info.bi_width, &bkp) != 0)
-    return -3;
+    return -1;
 
   for (int r = 0; r < bmp->info.bi_height; r++)
     for (int c = 0; c < bmp->info.bi_width; c++)

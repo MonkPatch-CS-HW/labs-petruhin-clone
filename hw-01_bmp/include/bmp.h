@@ -42,7 +42,6 @@ typedef struct bmp_picture
   int line_width;
 } bmp_picture_t;
 
-int padd(int x);
 int load_bmp(char *filepath, bmp_picture_t *bmp);
 int crop(bmp_picture_t *bmp, int x, int y, int w, int h);
 int rotate(bmp_picture_t *bmp);
