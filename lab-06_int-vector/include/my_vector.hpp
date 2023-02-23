@@ -6,6 +6,7 @@
 class MyVector {
 public:
     MyVector();
+    MyVector(const MyVector & other);
     MyVector(std::size_t init_capacity);
     ~MyVector();
 
