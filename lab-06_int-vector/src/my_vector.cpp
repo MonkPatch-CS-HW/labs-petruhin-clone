@@ -102,6 +102,22 @@ void MyVector::erase(std::size_t index)
   _size--;
 }
 
+MyVector &MyVector::operator=(const MyVector &other)
+{
+  if (this != &other)
+  {
+    _capacity = other._capacity;
+    _size = other._size;
+    delete[] _data;
+    _data = new int[_capacity];
+    for (std::size_t i = 0; i < _size; i++)
+    {
+      _data[i] = other._data[i];
+    }
+  }
+  return *this;
+}
+
 MyVector::~MyVector()
 {
   delete[] _data;

@@ -16,6 +16,8 @@ public:
     std::size_t size();
     std::size_t capacity();
 
+    MyVector& operator=(const MyVector & other);
+
     void reserve(std::size_t new_capacity);
     void resize(std::size_t new_size);
 
