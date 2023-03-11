@@ -87,7 +87,6 @@ Matrix &Matrix::operator=(const Matrix &m)
 
   for (size_t i = 0; i < _rows; i++)
   {
-    _data[i] = new int[_cols];
     memcpy(_data[i], m._data[i], _cols * sizeof(int));
   }
 
