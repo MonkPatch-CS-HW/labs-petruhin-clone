@@ -4,10 +4,11 @@
 #include <cstdio>
 #include <cstddef>
 
-class Matrix {
+class Matrix
+{
 public:
   Matrix(size_t r, size_t c);
-  Matrix(const Matrix& m);
+  Matrix(const Matrix &m);
   ~Matrix();
 
   size_t get_rows() const;
@@ -16,18 +17,20 @@ public:
   int get(size_t i, size_t j) const;
   void print(FILE *f);
 
-  Matrix operator+(const Matrix& m) const;
-  Matrix operator-(const Matrix& m) const;
-  Matrix operator*(const Matrix& m) const;
+  Matrix operator+(const Matrix &m) const;
+  Matrix operator-(const Matrix &m) const;
+  Matrix operator*(const Matrix &m) const;
 
-  Matrix& operator=(const Matrix& m);
-  Matrix& operator+=(const Matrix& m);
-  Matrix& operator-=(const Matrix& m);
-  Matrix& operator*=(const Matrix& m);
+  Matrix &operator=(const Matrix &m);
+  Matrix &operator+=(const Matrix &m);
+  Matrix &operator-=(const Matrix &m);
+  Matrix &operator*=(const Matrix &m);
 
-  bool operator==(const Matrix& m) const;
-  bool operator!=(const Matrix& m) const;
+  bool operator==(const Matrix &m) const;
+  bool operator!=(const Matrix &m) const;
+
 private:
+  void make_table(size_t r, size_t c, bool erase = true);
   size_t _rows;
   size_t _cols;
   int **_data;
