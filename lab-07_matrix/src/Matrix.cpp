@@ -123,8 +123,8 @@ Matrix& Matrix::operator-=(const Matrix& m) {
 
 Matrix& Matrix::operator*=(const Matrix& m) {
   Matrix result = *this * m;
-  for (size_t i = 0; i < _rows; i++) {
-    for (size_t j = 0; j < _cols; j++) {
+  for (size_t i = 0; i < result.get_rows(); i++) {
+    for (size_t j = 0; j < result.get_cols(); j++) {
       _data[i][j] = result.get(i, j);
     }
   }
