@@ -10,7 +10,7 @@ shared_ptr::shared_ptr(const shared_ptr &other) : storage_(other.storage_)
 
 shared_ptr &shared_ptr::operator=(shared_ptr other)
 {
-  this->storage_ = other.storage_;
+  std::swap(this->storage_, other.storage_);
   return *this;
 }
 
