@@ -44,7 +44,9 @@ void Scheme::remove_figure(int id)
   if (index == -1)
     return;
   delete figures_[index];
-  memmove(figures_ + index, figures_ + index + 1, size_-- - index - 1);
+  size_--;
+  for (int i = index; i < size_; i++)
+    figures_[i] = figures_[i + 1];
 }
 
 void Scheme::print_all_figures()
