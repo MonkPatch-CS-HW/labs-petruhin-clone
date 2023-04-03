@@ -5,16 +5,18 @@
 
 namespace containers
 {
-  unsigned int log2_ceil(unsigned long long num)
+  unsigned int ceil_pow2(unsigned long long num)
   {
-    if (num == 0)
-      return 0;
-      
+    if (num <= 1)
+      return num;
+
     num = (num << 1) - 1;
+
     unsigned int log = 0;
     while (num >>= 1)
       log++;
-    return log;
+    
+    return 1 << log;
   }
 
   template <typename T>
@@ -51,7 +53,8 @@ namespace containers
   template <typename T>
   my_vector<T>::~my_vector()
   {
-    delete array_;
+    clear();
+    delete[] reinterpret_cast<unsigned char *>(array_);
   }
 
   template <typename T>
@@ -97,17 +100,17 @@ namespace containers
   void my_vector<T>::reserve(std::size_t n)
   {
     std::size_t new_size = size_;
-    std::size_t new_cap = 1 << log2_ceil(n);
+    std::size_t new_cap = ceil_pow2(n);
 
     if (new_cap <= capacity_)
       return;
 
-    T *new_array = reinterpret_cast<T *>(new unsigned char[capacity_]);
+    T *new_array = reinterpret_cast<T *>(new unsigned char[new_cap * sizeof(T)]);
     for (std::size_t i = 0; i < size_; i++)
       new_array[i] = array_[i];
 
     clear();
-    delete[] array_;
+    delete[] reinterpret_cast<unsigned char *>(array_);
 
     array_ = new_array;
     capacity_ = new_cap;
@@ -144,16 +147,15 @@ namespace containers
   template <typename T>
   void my_vector<T>::push_back(const T &t)
   {
-    reserve(++size_);
-
-    array_[size_ - 1] = t;
+    reserve(size_ + 1);
+    array_[size_++] = t;
   }
 
   template <typename T>
   void my_vector<T>::pop_back()
   {
     if (size_ > 0)
-      array_[size_--].~T();
+      array_[--size_].~T();
   }
 }
 

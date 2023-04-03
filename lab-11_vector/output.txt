@@ -1,0 +1,10 @@
+now new_array is 0x4db5c80
+5now new_array is 0x4db6d10
+now new_array is 0x4db6d60
+now new_array is 0x4db6db0
+now new_array is 0x4db6e00
+now new_array is 0x4db6f20
+asdf 4 12now new_array is 0x4db6f80
+now new_array is 0x4db6ff0
+now new_array is 0x4db7090
+now new_array is 0x4db7130
