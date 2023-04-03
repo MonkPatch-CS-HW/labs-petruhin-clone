@@ -1,30 +1,52 @@
 #include <iostream>
 
+#include <cstring>
+#include <cassert>
 #include "my_vector.h"
 
-namespace product {
+namespace product
+{
 
-class Product {
-public:
-    Product(const char* name, int quantity, double price);
+  class Product
+  {
+  public:
+    Product(const char *name, int quantity, double price);
+    ~Product();
 
-private:
+  private:
     char *name_;
     int quantity_;
     double price_;
-};
+  };
 
-}  // namespace product
+  Product::Product(const char *name, int quantity, double price) : quantity_(quantity), price_(price)
+  {
+    name_ = new char[strlen(name) + 1];
+    strcpy(name_, name);
+  }
 
-int main() {
-	containers::my_vector<int> v;
-	v.push_back(2);
-	const int n{3};
-	v.push_back(n);
-	std::cout << v << std::endl;
+  Product::~Product()
+  {
+    delete[] name_;
+  }
 
-    //test_my_vector<int>(5, 10);
-    //test_my_vector<Product>(Product("asdf", 4, 12.0), Product("qwe", -1, 7.5));
+} // namespace product
 
-    return 0;
+int main()
+{
+  containers::my_vector<int> v;
+  v.push_back(2);
+  const int n{3};
+  v.push_back(n);
+  containers::my_vector<int> vv = v;
+  v = vv;
+  vv.pop_back();
+  vv.clear();
+  assert(vv.empty());
+  std::cout << v << std::endl;
+
+  // test_my_vector<int>(5, 10);
+  // test_my_vector<Product>(Product("asdf", 4, 12.0), Product("qwe", -1, 7.5));
+
+  return 0;
 }

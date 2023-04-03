@@ -149,7 +149,8 @@ namespace containers
   template <typename T>
   void my_vector<T>::pop_back()
   {
-    array_[size_--].~T();
+    if (size_ > 0)
+      array_[size_--].~T();
   }
 }
 
