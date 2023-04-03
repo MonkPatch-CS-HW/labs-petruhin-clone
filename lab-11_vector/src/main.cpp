@@ -13,10 +13,12 @@ namespace product
     Product(const char *name, int quantity, double price);
     ~Product();
 
+    friend std::ostream &operator<<(std::ostream &out, Product &p);
   private:
     char *name_;
     int quantity_;
     double price_;
+
   };
 
   Product::Product(const char *name, int quantity, double price) : quantity_(quantity), price_(price)
@@ -28,6 +30,12 @@ namespace product
   Product::~Product()
   {
     delete[] name_;
+  }
+
+  std::ostream &operator<<(std::ostream &out, Product &p)
+  {
+    out << p.name_ << ' ' << p.quantity_ << ' ' << p.price_;
+    return out;
   }
 
 } // namespace product
