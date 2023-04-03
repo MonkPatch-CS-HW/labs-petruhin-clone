@@ -43,6 +43,7 @@ int main()
   vv.pop_back();
   vv.clear();
   assert(vv.empty());
+  assert(v.size() == 2);
   std::cout << v << std::endl;
   vv.resize(10);
 

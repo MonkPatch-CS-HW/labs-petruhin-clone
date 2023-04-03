@@ -20,7 +20,7 @@ namespace containers
     if (mv.size_ > 0)
     {
       std::cout << mv[0];
-      for (std::size_t i = 0; i < mv.size_; i++)
+      for (std::size_t i = 1; i < mv.size_; i++)
       {
         std::cout << ' ' << mv[i];
       }
@@ -94,7 +94,7 @@ namespace containers
   void my_vector<T>::reserve(std::size_t n)
   {
     std::size_t new_size = size_;
-    std::size_t new_cap = log2_ceil(n);
+    std::size_t new_cap = 1 << log2_ceil(n);
 
     if (new_cap <= capacity_)
       return;
