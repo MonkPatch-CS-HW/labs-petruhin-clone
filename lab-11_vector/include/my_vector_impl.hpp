@@ -19,10 +19,10 @@ namespace containers
   {
     if (mv.size_ > 0)
     {
-      std::cout << '<' << mv[0] << '>';
+      std::cout << mv[0];
       for (std::size_t i = 0; i < mv.size_; i++)
       {
-        std::cout << ' ' << '<' << mv[i] << '>';
+        std::cout << ' ' << mv[i];
       }
     }
     return out;
