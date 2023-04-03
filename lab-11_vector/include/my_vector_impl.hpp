@@ -86,6 +86,8 @@ namespace containers
       array_[size_] = other.array_[size_];
       size_++;
     }
+
+    return *this;
   }
 
   template <typename T>
