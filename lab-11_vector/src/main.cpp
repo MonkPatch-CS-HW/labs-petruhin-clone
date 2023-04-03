@@ -43,6 +43,7 @@ namespace product
 int main()
 {
   containers::my_vector<int> v;
+  assert(v.capacity() == 1);
   v.push_back(2);
   const int n{3};
   v.push_back(n);

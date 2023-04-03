@@ -7,6 +7,9 @@ namespace containers
 {
   unsigned int log2_ceil(unsigned long long num)
   {
+    if (num == 0)
+      return 0;
+      
     num = (num << 1) - 1;
     unsigned int log = 0;
     while (num >>= 1)
