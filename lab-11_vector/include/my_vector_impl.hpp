@@ -29,7 +29,7 @@ namespace containers
   }
 
   template <typename T>
-  my_vector<T>::my_vector() : my_vector(2)
+  my_vector<T>::my_vector() : my_vector(0)
   {
   }
 
