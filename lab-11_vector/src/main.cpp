@@ -81,7 +81,8 @@ void test_my_vector(const T &arg1, const T &arg2)
   assert(strcmp(s1, s2) == 0);
   v1.push_back(arg1);
   v1.push_back(arg2);
-  assert(v1.size() == 3);
+  v1.pop_back();
+  assert(v1.size() == 2);
   assert(v1.capacity() == 4);
   containers::my_vector<T> v2;
   v2 = v1;
@@ -91,14 +92,25 @@ void test_my_vector(const T &arg1, const T &arg2)
   v1.reserve(10);
   assert(v1.size() == 0);
   assert(v1.capacity() == 16);
-  assert(v2.size() == 3);
-  assert(v2.capacity() == 4);
+  assert(v2.size() == 2);
+  assert(v2.capacity() == 2);
+}
+
+template <typename T>
+void test_my_vector_default_constructible(const T &arg1, const T &arg2)
+{
+  containers::my_vector<T> v1(10);
+  assert(v1.size() == 10);
+  assert(v1.capacity() == 16); 
+  v1.resize(20);
+  assert(v1.size() == 20);
+  assert(v1.capacity() == 32);
 }
 
 int main()
 {
-  // test_my_vector<int>(5, 10);
+  test_my_vector_default_constructible<int>(5, 10);
+  test_my_vector<int>(5, 10);
   test_my_vector<product::Product>(product::Product("asdf", 4, 12.0), product::Product("qwe", -1, 7.5));
-
   return 0;
 }

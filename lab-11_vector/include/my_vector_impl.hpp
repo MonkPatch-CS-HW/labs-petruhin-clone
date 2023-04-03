@@ -34,14 +34,15 @@ namespace containers
   }
 
   template <typename T>
-  my_vector<T>::my_vector() : my_vector(0)
+  my_vector<T>::my_vector()
   {
+    init(0);
   }
 
   template <typename T>
   my_vector<T>::my_vector(std::size_t n)
   {
-    reserve(n);
+    resize(n);
   }
 
   template <typename T>
@@ -76,7 +77,7 @@ namespace containers
   }
 
   template <typename T>
-  void my_vector<T>::init(std::size_t n, std::size_t sz)
+  void my_vector<T>::init(std::size_t n)
   {
     clear();
     reserve(n);
@@ -120,13 +121,13 @@ namespace containers
   template <typename T>
   void my_vector<T>::resize(std::size_t n)
   {
-    if (n < size_)
+    if (n <= size_)
       return;
 
     reserve(n);
 
     for (std::size_t i = size_; i < n; i++)
-      new (&array_[i]) T();
+      push_back(T());
   }
 
   template <typename T>

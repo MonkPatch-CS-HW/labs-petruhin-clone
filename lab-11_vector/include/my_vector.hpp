@@ -16,7 +16,7 @@ namespace containers
     my_vector<T> &operator=(const my_vector &other);
     ~my_vector();
 
-    void init(std::size_t n, std::size_t sz = 0);
+    void init(std::size_t n);
 
     std::size_t size() const;
     std::size_t capacity() const;
