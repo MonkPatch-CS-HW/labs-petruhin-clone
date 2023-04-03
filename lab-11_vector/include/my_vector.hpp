@@ -2,6 +2,7 @@
 #define MY_VECTOR_HPP_
 
 #include <cstddef>
+#include <iostream>
 
 namespace containers
 {
