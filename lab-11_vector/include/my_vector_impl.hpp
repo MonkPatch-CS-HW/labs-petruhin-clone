@@ -119,7 +119,7 @@ namespace containers
 
     reserve(n);
 
-    for (int i = size_; i < n; i++)
+    for (std::size_t i = size_; i < n; i++)
       new (&array_[i]) T();
   }
 
