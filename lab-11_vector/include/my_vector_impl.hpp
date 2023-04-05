@@ -61,7 +61,7 @@ namespace containers
     if (n <= capacity_)
       return;
 
-    T *new_array = reinterpret_cast<T *>(operator new(n * sizeof(T)));
+    T *new_array = reinterpret_cast<T *>(operator new(new_capacity * sizeof(T)));
     for (size_t i = 0; i < size_; i++)
       new (new_array + i) T(array_[i]);
 
