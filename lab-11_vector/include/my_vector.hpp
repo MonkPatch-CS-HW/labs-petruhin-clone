@@ -16,7 +16,7 @@ namespace containers
     my_vector<T> &operator=(const my_vector &other);
     ~my_vector();
 
-    void init(std::size_t n);
+    // void init(std::size_t n);
 
     std::size_t size() const;
     std::size_t capacity() const;
@@ -35,6 +35,8 @@ namespace containers
     void clear();
 
   private:
+    void clear_until(std::size_t n);
+
     size_t capacity_ = 0;
     size_t size_ = 0;
     T *array_ = nullptr;

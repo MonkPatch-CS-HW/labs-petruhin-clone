@@ -79,7 +79,9 @@ void test_my_vector(const T &arg1, const T &arg2)
   const char *s1 = ss1.str().c_str();
   const char *s2 = ss2.str().c_str();
   assert(strcmp(s1, s2) == 0);
+  std::cout << "v1.size: " << v1.size() << "v1.cap: " << v1.capacity() << std::endl;
   v1.push_back(arg1);
+  std::cout << "v1.size: " << v1.size() << "v1.cap: " << v1.capacity() << std::endl;
   v1.push_back(arg2);
   v1.pop_back();
   assert(v1.size() == 2);

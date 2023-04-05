@@ -21,13 +21,14 @@ namespace containers
 
   template <typename T>
   my_vector<T>::my_vector()
-      : size_(0), capacity_(0), data_(nullptr)
+      : capacity_(0), size_(0), array_(nullptr)
   {
   }
 
   template <typename T>
-  my_vector<T>::my_vector(std::size_t n) : resize(n)
+  my_vector<T>::my_vector(std::size_t n)
   {
+    resize(n);
   }
 
   template <typename T>
@@ -39,33 +40,38 @@ namespace containers
   template <typename T>
   my_vector<T> &my_vector<T>::operator=(const my_vector &other)
   {
-    if (this != &other)
-    {
-      resize(other.size_);
-      for (size_t i = 0; i < size_; i++)
-        new (data_ + i) T(other.data_[i]);
-    }
+    if (this == &other)
+      return *this;
+
+    clear();
+    reserve(other.size_);
+
+    while (size_ < other.size_)
+      push_back(other.array_[size_]);
+
     return *this;
   }
 
   template <typename T>
   void my_vector<T>::reserve(std::size_t n)
   {
-    n = ceil_pow2(n);
+    std::size_t new_capacity = ceil_pow2(n);
+    std::size_t new_size = size_;
 
     if (n <= capacity_)
       return;
 
-    T *new_data = reinterpret_cast<T *>(operator new(n * sizeof(T)));
+    T *new_array = reinterpret_cast<T *>(operator new(n * sizeof(T)));
     for (size_t i = 0; i < size_; i++)
-      new (new_data + i) T(data_[i]);
+      new (new_array + i) T(array_[i]);
 
     clear();
 
-    delete data_;
+    operator delete(array_);
 
-    data_ = new_data;
-    capacity_ = n;
+    array_ = new_array;
+    capacity_ = new_capacity;
+    size_ = new_size;
   }
 
   template <typename T>
@@ -76,6 +82,12 @@ namespace containers
     while (size_ < n)
       push_back(T());
 
+    clear_until(n);
+  }
+
+  template <typename T>
+  void my_vector<T>::clear_until(std::size_t n)
+  {
     while (size_ > n)
       pop_back();
   }
@@ -83,7 +95,7 @@ namespace containers
   template <typename T>
   void my_vector<T>::clear()
   {
-    resize(0);
+    clear_until(0);
   }
 
   template <typename T>
@@ -92,14 +104,14 @@ namespace containers
     if (index >= size_)
       throw std::out_of_range("index out of range");
 
-    return data_[index];
+    return array_[index];
   }
 
   template <typename T>
   void my_vector<T>::push_back(const T &t)
   {
     reserve(size_ + 1);
-    new (data_ + size_) T(t);
+    new (array_ + size_) T(t);
     size_++;
   }
 
@@ -109,7 +121,7 @@ namespace containers
     if (size_ == 0)
       throw std::out_of_range("index out of range");
 
-    data_[size_ - 1].~T();
+    array_[size_ - 1].~T();
     size_--;
   }
 
@@ -145,7 +157,7 @@ namespace containers
   my_vector<T>::~my_vector()
   {
     clear();
-    delete data_;
+    operator delete(array_);
   }
 }
 
