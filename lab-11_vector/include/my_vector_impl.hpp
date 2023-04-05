@@ -15,34 +15,19 @@ namespace containers
     unsigned int log = 0;
     while (num >>= 1)
       log++;
-    
+
     return 1 << log;
   }
 
   template <typename T>
-  std::ostream &operator<<(std::ostream &out, const my_vector<T> &mv)
-  {
-    if (mv.size_ > 0)
-    {
-      std::cout << mv[0];
-      for (std::size_t i = 1; i < mv.size_; i++)
-      {
-        std::cout << ' ' << mv[i];
-      }
-    }
-    return out;
-  }
-
-  template <typename T>
   my_vector<T>::my_vector()
+      : size_(0), capacity_(0), data_(nullptr)
   {
-    init(0);
   }
 
   template <typename T>
-  my_vector<T>::my_vector(std::size_t n)
+  my_vector<T>::my_vector(std::size_t n) : resize(n)
   {
-    resize(n);
   }
 
   template <typename T>
@@ -52,10 +37,80 @@ namespace containers
   }
 
   template <typename T>
-  my_vector<T>::~my_vector()
+  my_vector<T> &my_vector<T>::operator=(const my_vector &other)
   {
+    if (this != &other)
+    {
+      resize(other.size_);
+      for (size_t i = 0; i < size_; i++)
+        new (data_ + i) T(other.data_[i]);
+    }
+    return *this;
+  }
+
+  template <typename T>
+  void my_vector<T>::reserve(std::size_t n)
+  {
+    n = ceil_pow2(n);
+
+    if (n <= capacity_)
+      return;
+
+    T *new_data = reinterpret_cast<T *>(operator new(n * sizeof(T)));
+    for (size_t i = 0; i < size_; i++)
+      new (new_data + i) T(data_[i]);
+
     clear();
-    delete[] reinterpret_cast<unsigned char *>(array_);
+
+    delete data_;
+
+    data_ = new_data;
+    capacity_ = n;
+  }
+
+  template <typename T>
+  void my_vector<T>::resize(std::size_t n)
+  {
+    reserve(n);
+
+    while (size_ < n)
+      push_back(T());
+
+    while (size_ > n)
+      pop_back();
+  }
+
+  template <typename T>
+  void my_vector<T>::clear()
+  {
+    resize(0);
+  }
+
+  template <typename T>
+  T &my_vector<T>::operator[](std::size_t index) const
+  {
+    if (index >= size_)
+      throw std::out_of_range("index out of range");
+
+    return data_[index];
+  }
+
+  template <typename T>
+  void my_vector<T>::push_back(const T &t)
+  {
+    reserve(size_ + 1);
+    new (data_ + size_) T(t);
+    size_++;
+  }
+
+  template <typename T>
+  void my_vector<T>::pop_back()
+  {
+    if (size_ == 0)
+      throw std::out_of_range("index out of range");
+
+    data_[size_ - 1].~T();
+    size_--;
   }
 
   template <typename T>
@@ -77,86 +132,20 @@ namespace containers
   }
 
   template <typename T>
-  void my_vector<T>::init(std::size_t n)
+  std::ostream &operator<<(std::ostream &out, const my_vector<T> &mv)
+  {
+    out << mv[0];
+    for (size_t i = 1; i < mv.size(); i++)
+      out << ' ' << mv[i];
+
+    return out;
+  }
+
+  template <typename T>
+  my_vector<T>::~my_vector()
   {
     clear();
-    reserve(n);
-  }
-
-  template <typename T>
-  my_vector<T> &my_vector<T>::operator=(const my_vector<T> &other)
-  {
-    init(other.size_);
-
-    while (size_ < other.size_)
-    {
-      array_[size_] = other.array_[size_];
-      size_++;
-    }
-
-    return *this;
-  }
-
-  template <typename T>
-  void my_vector<T>::reserve(std::size_t n)
-  {
-    std::size_t new_size = size_;
-    std::size_t new_cap = ceil_pow2(n);
-
-    if (new_cap <= capacity_)
-      return;
-
-    T *new_array = reinterpret_cast<T *>(new unsigned char[new_cap * sizeof(T)]);
-    for (std::size_t i = 0; i < size_; i++)
-      new_array[i] = array_[i];
-
-    clear();
-    delete[] reinterpret_cast<unsigned char *>(array_);
-
-    array_ = new_array;
-    capacity_ = new_cap;
-    size_ = new_size;
-  }
-
-  template <typename T>
-  void my_vector<T>::resize(std::size_t n)
-  {
-    if (n <= size_)
-      return;
-
-    reserve(n);
-
-    for (std::size_t i = size_; i < n; i++)
-      push_back(T());
-  }
-
-  template <typename T>
-  T &my_vector<T>::operator[](std::size_t index) const
-  {
-    if (index > size_)
-      throw std::out_of_range("my_vector out of range");
-    return array_[index];
-  }
-
-  template <typename T>
-  void my_vector<T>::clear()
-  {
-    while (!empty())
-      pop_back();
-  }
-
-  template <typename T>
-  void my_vector<T>::push_back(const T &t)
-  {
-    reserve(size_ + 1);
-    array_[size_++] = t;
-  }
-
-  template <typename T>
-  void my_vector<T>::pop_back()
-  {
-    if (size_ > 0)
-      array_[--size_].~T();
+    delete data_;
   }
 }
 
