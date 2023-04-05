@@ -44,7 +44,8 @@ namespace containers
       return *this;
 
     clear();
-    reserve(other.capacity_);
+    reserve(other.size_);
+    capacity_ = other.capacity_;
 
     while (size_ < other.size_)
       push_back(other.array_[size_]);
