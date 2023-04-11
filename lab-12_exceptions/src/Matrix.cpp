@@ -111,8 +111,8 @@ void Matrix::read(std::istream &in)
     throw MatrixError("READ", "invalid format");
 
   Matrix tmp(rows, cols);
-  for (size_t r = 0; r < _rows; r++)
-    for (size_t c = 0; c < _cols; c++)
+  for (size_t r = 0; r < tmp._rows; r++)
+    for (size_t c = 0; c < tmp._cols; c++)
     {
       if (!(in >> val))
         throw MatrixError("READ", "invalid format");
