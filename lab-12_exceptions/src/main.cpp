@@ -72,7 +72,7 @@ void exit_handler(std::istream &in, std::ostream &out)
 
 void exception_handler(const HandlerEntry &entry, std::exception &err)
 {
-  if (std::bad_alloc *err_bad_alloc = dynamic_cast<std::bad_alloc*>(&err))
+  if (dynamic_cast<std::bad_alloc*>(&err))
   {
     std::cout << "Unable to allocate memory." << std::endl;
     return;
