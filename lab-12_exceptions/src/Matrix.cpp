@@ -71,7 +71,7 @@ void Matrix::load(std::string filename)
   {
     fin >> *this;
   }
-  catch (MatrixError &ex)
+  catch (MatrixError &err)
   {
     throw MatrixError("LOAD", "invalid file format");
   }

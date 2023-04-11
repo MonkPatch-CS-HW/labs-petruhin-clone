@@ -22,10 +22,10 @@ bool CommandProcessor::process_command(const std::string &name, std::istream &in
     {
       entry.handler(in, out);
     }
-    catch (std::exception &ex)
+    catch (std::exception &err)
     {
       if (_exception_handler != nullptr)
-        _exception_handler(entry, ex);
+        _exception_handler(entry, err);
       else
         throw;
     }
