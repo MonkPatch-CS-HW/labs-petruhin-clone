@@ -15,10 +15,10 @@ int get_register(std::istream &in)
   in >> dollar >> reg;
 
   if (dollar != '$')
-    throw std::runtime_error("incorrect register format");
+    throw std::runtime_error("Incorrect register format");
 
   if (reg < 0 || reg > 9)
-    throw std::runtime_error("incorrect register number");
+    throw std::runtime_error("Incorrect register number");
 
   return reg;
 }
@@ -72,6 +72,11 @@ void exit_handler(std::istream &in, std::ostream &out)
 
 void exception_handler(const HandlerEntry &entry, std::exception &err)
 {
+  if (std::bad_alloc *err_bad_alloc = dynamic_cast<std::bad_alloc*>(&err))
+  {
+    std::cout << "Unable to allocate memory." << std::endl;
+    return;
+  }
   std::cout << err.what() << std::endl;
 }
 
