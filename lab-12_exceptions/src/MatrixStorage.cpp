@@ -34,5 +34,5 @@ void MatrixStorage::print(int reg, std::ostream &out)
 
 void MatrixStorage::print_elem(int reg, size_t r, size_t c, std::ostream &out)
 {
-  out << _matrices[reg].get(r, c);
+  out << _matrices[reg].get(r, c) << std::endl;
 }
