@@ -117,7 +117,7 @@ void Matrix::read(std::istream &in)
       if (!(in >> val))
         throw MatrixError("READ", "invalid format");
 
-      set(r, c, val);
+      tmp.set(r, c, val);
     }
 
   *this = tmp;
