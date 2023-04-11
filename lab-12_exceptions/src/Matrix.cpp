@@ -110,7 +110,7 @@ void Matrix::read(std::istream &in)
   if (!(in >> rows >> cols))
     throw MatrixError("READ", "invalid format");
 
-  *this = Matrix(rows, cols);
+  Matrix tmp(rows, cols);
   for (size_t r = 0; r < _rows; r++)
     for (size_t c = 0; c < _cols; c++)
     {
@@ -119,6 +119,8 @@ void Matrix::read(std::istream &in)
 
       set(r, c, val);
     }
+
+  *this = tmp;
 }
 
 Matrix &Matrix::operator=(const Matrix &m)
