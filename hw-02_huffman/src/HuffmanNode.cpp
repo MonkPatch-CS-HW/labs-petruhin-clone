@@ -124,7 +124,7 @@ void HuffmanNode::removeChar(char ch) {
 void HuffmanNode::initChar(char ch) {
   // std::cout << "InitChar { " << ch << " };" << std::endl;
   if (!this->isEmpty())
-    throw new std::logic_error(std::string("TODO"));
+    throw std::logic_error(std::string("TODO"));
 
   _charset = std::set<char>();
   addChar(ch);
@@ -133,7 +133,7 @@ void HuffmanNode::initChar(char ch) {
 char HuffmanNode::getChar() {
   // std::cout << "GetChar { };" << std::endl;
   if (!this->isLeaf())
-    throw new std::logic_error(std::string("TODO"));
+    throw std::logic_error(std::string("TODO"));
 
   return *this->_charset.begin();
 }
@@ -144,7 +144,7 @@ void HuffmanNode::setChar(char ch) {
     return initChar(ch);
 
   if (!this->isLeaf())
-    throw new std::logic_error(std::string("TODO"));
+    throw std::logic_error(std::string("TODO"));
 
   char oldCh = getChar();
   changeChar(oldCh, ch);
