@@ -1,5 +1,6 @@
 #include "BinaryReader.hpp"
 #include <exception>
+#include <iostream>
 
 BinaryReader::BinaryReader(std::string filename, int bitsStrip)
     : _fin(filename, std::ios::binary | std::ios::in), _bitsLeft(0),
@@ -13,13 +14,11 @@ bool BinaryReader::tryReadByte(unsigned char &byte) {
   _fin.read((char *)&_chunk, sizeof(unsigned char));
   if (!_fin.good()) {
     _noRead = true;
+    _chunk = oldChunk;
     return false;
   }
 
   byte = (oldChunk << (8 - _bitsLeft)) | (_chunk >> _bitsLeft);
-  if (_bitsLeft <= 0)
-    _bitsLeft = 8;
-
   return true;
 }
 
@@ -32,13 +31,12 @@ unsigned char BinaryReader::readByte() {
 }
 
 bool BinaryReader::tryReadBit(unsigned char &bit) {
-  bit = (_chunk >> --_bitsLeft) & 0b1;
-
-  if (_noRead && _bitsLeft < _bitsStrip)
-    return false;
-
   if (_bitsLeft == 0)
-    readByte();
+    if (!tryReadByte(_chunk))
+      return false;
+
+  _bitsLeft = (_bitsLeft - 1 + 8) % 8;
+  bit = (_chunk >> _bitsLeft) & 0b1;
 
   return true;
 }
@@ -50,3 +48,5 @@ unsigned char BinaryReader::readBit() {
 
   throw std::logic_error("TODO");
 }
+
+void BinaryReader::close() { _fin.close(); }

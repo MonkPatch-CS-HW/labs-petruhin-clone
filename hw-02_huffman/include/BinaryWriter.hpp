@@ -19,6 +19,8 @@ public:
 
   bool tryWriteByte(unsigned char byte);
   bool tryWriteBit(unsigned char bit);
+
+  void close();
 };
 
 #endif

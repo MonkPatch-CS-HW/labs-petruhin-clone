@@ -49,3 +49,5 @@ void BinaryWriter::writeBit(unsigned char bit) {
 
   throw std::logic_error("TODO");
 }
+
+void BinaryWriter::close() { _fout.close(); }

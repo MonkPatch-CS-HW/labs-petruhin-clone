@@ -19,6 +19,8 @@ public:
 
   bool tryReadByte(unsigned char &byte);
   bool tryReadBit(unsigned char &bit);
+
+  void close();
 };
 
 #endif
