@@ -11,8 +11,8 @@ private:
   HuffmanNode *_rootNode;
 
 public:
-  static HuffmanTree *fromText(std::string string);
-  static HuffmanTree *fromTable(unsigned char *data);
+  static HuffmanTree *fromText(char *buffer, size_t n);
+  static HuffmanTree *fromTable(unsigned char *buffer);
 
   HuffmanTree(HuffmanNode *rootNode = new HuffmanNode(nullptr));
   ~HuffmanTree();
@@ -20,6 +20,8 @@ public:
   HuffmanNode *getRootNode();
 
   int getCodeLen(unsigned char ch);
+
+  unsigned char* generateTable();
 
   void print();
   void printTable();

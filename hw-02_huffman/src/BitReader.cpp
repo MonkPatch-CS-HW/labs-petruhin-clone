@@ -29,8 +29,6 @@ bool BitReader::tryReadBit(unsigned char &bit) {
   _bitsLeft = (_bitsLeft - 1 + 8) % 8;
   bit = (_chunk >> _bitsLeft) & 0b1;
 
-  std::cout << "next bit = " << bit << std::endl;
-
   return true;
 }
 

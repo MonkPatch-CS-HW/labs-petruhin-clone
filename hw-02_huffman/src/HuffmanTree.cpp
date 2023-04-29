@@ -33,9 +33,11 @@ findToCombine(std::set<HuffmanNode *> nodeset) {
   return std::pair<HuffmanNode *, HuffmanNode *>(smallest, secondSmallest);
 }
 
-HuffmanTree *HuffmanTree::fromText(std::string string) {
+HuffmanTree *HuffmanTree::fromText(char *buffer, size_t n) {
   std::map<unsigned char, HuffmanNode *> nodemap;
-  for (auto &ch : string) {
+  for (size_t i = 0; i < n; i++) {
+    unsigned char ch = buffer[i];
+
     if (nodemap.count(ch)) {
       nodemap[ch]->incCount();
     } else {
@@ -90,11 +92,20 @@ HuffmanNode *HuffmanTree::getRootNode() {
 
 void HuffmanTree::print() { _rootNode->print(); }
 void HuffmanTree::printTable() {
+  unsigned char *table = generateTable();
   std::cout << "unsigned char table[256] = { ";
   for (int i = 0; i < 256; i++)
-    std::cout << getCodeLen(i) << ", ";
+    std::cout << table[i] << ", ";
   std::cout << "};" << std::endl;
 }
+
+unsigned char* HuffmanTree::generateTable() {
+  unsigned char *table = new unsigned char[256];
+  for (int i = 0; i < 256; i++)
+    table[i] = getCodeLen(i);
+  return table;
+}
+
 bool HuffmanTree::tryInsertLeftmost(unsigned char ch, int len) {
   return _rootNode->tryInsertLeftmost(ch, len);
 }
