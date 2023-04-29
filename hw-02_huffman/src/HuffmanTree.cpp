@@ -3,11 +3,17 @@
 #include <map>
 #include <numeric>
 #include <set>
+#include <vector>
 
 #include "HuffmanNode.hpp"
 #include "HuffmanTree.hpp"
 
-HuffmanTree::HuffmanTree(HuffmanNode *rootNode) : _rootNode(rootNode) {}
+HuffmanTree::HuffmanTree(HuffmanNode *rootNode) : _rootNode(rootNode) {
+  normalize();
+}
+
+HuffmanTree::HuffmanTree(const HuffmanTree &other)
+    : HuffmanTree(nodeFromTable(other.generateTable())) {}
 
 HuffmanTree::~HuffmanTree() { delete _rootNode; }
 
@@ -33,9 +39,9 @@ findToCombine(std::set<HuffmanNode *> nodeset) {
   return std::pair<HuffmanNode *, HuffmanNode *>(smallest, secondSmallest);
 }
 
-HuffmanTree *HuffmanTree::fromText(char *buffer, size_t n) {
+HuffmanTree HuffmanTree::fromBuffer(const std::vector<char> &buffer) {
   std::map<unsigned char, HuffmanNode *> nodemap;
-  for (size_t i = 0; i < n; i++) {
+  for (size_t i = 0; i < buffer.size(); i++) {
     unsigned char ch = buffer[i];
 
     if (nodemap.count(ch)) {
@@ -55,57 +61,70 @@ HuffmanTree *HuffmanTree::fromText(char *buffer, size_t n) {
     std::string strFirst = first->charsetString();
     std::string strSecond = second->charsetString();
 
-    // first->print();
-    // second->print();
-    // std::cout << "\n\n\n\n";
-
     HuffmanNode *joined = first->join(second);
     nodeset.erase(first);
     nodeset.erase(second);
     nodeset.insert(joined);
   }
   HuffmanNode *rootNode = *nodeset.begin();
-  return new HuffmanTree(rootNode);
+  return HuffmanTree(rootNode);
 }
 
-HuffmanTree *HuffmanTree::fromTable(unsigned char *data) {
-  HuffmanTree *tree = new HuffmanTree();
+HuffmanTree HuffmanTree::fromTable(const std::vector<char> &table) {
+  return HuffmanTree::nodeFromTable(table);
+}
+
+HuffmanNode *HuffmanTree::nodeFromTable(const std::vector<char> &table) {
+  HuffmanNode *rootNode = new HuffmanNode(nullptr);
   for (int i = 0; i < 256; i++) {
-    tree->tryInsertLeftmost(i, data[i]);
+    rootNode->tryInsertLeftmost(i, table[i]);
   }
-  return tree;
+
+  return rootNode;
 }
 
-int HuffmanTree::getCodeLen(unsigned char ch) {
+int HuffmanTree::getCodeLen(unsigned char ch) const {
   int len = 0;
   for (HuffmanNode *node = _rootNode; node != nullptr;
        node = node->select(ch), len++) {
+
     if (node->isLeaf() && node->getChar() == ch)
       return len;
   }
+
   return 0;
 }
 
-HuffmanNode *HuffmanTree::getRootNode() {
-  return _rootNode;
+void HuffmanTree::normalize() {
+  HuffmanNode *rootNode = nodeFromTable(generateTable());
+  delete _rootNode;
+  _rootNode = rootNode;
 }
 
+HuffmanNode *HuffmanTree::getRootNode() { return _rootNode; }
+
 void HuffmanTree::print() { _rootNode->print(); }
+
 void HuffmanTree::printTable() {
-  unsigned char *table = generateTable();
+  std::vector<char> table = generateTable();
+
   std::cout << "unsigned char table[256] = { ";
+
   for (int i = 0; i < 256; i++)
     std::cout << table[i] << ", ";
+
   std::cout << "};" << std::endl;
 }
 
-unsigned char* HuffmanTree::generateTable() {
-  unsigned char *table = new unsigned char[256];
+std::vector<char> HuffmanTree::generateTable() const {
+  std::vector<char> table(256);
   for (int i = 0; i < 256; i++)
     table[i] = getCodeLen(i);
   return table;
 }
 
 bool HuffmanTree::tryInsertLeftmost(unsigned char ch, int len) {
-  return _rootNode->tryInsertLeftmost(ch, len);
+  bool result = _rootNode->tryInsertLeftmost(ch, len);
+
+  return result;
 }

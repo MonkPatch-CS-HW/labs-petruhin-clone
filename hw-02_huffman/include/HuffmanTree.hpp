@@ -9,23 +9,31 @@
 class HuffmanTree {
 private:
   HuffmanNode *_rootNode;
+  std::vector<char> _cachedTable;
+
+  bool tryInsertLeftmost(unsigned char ch, int len);
+  static HuffmanNode *nodeFromTable(const std::vector<char> &table);
 
 public:
-  static HuffmanTree *fromText(char *buffer, size_t n);
-  static HuffmanTree *fromTable(unsigned char *buffer);
+  static HuffmanTree fromBuffer(const std::vector<char> &buffer);
+  static HuffmanTree fromTable(const std::vector<char> &table);
 
   HuffmanTree(HuffmanNode *rootNode = new HuffmanNode(nullptr));
+
+  HuffmanTree(const HuffmanTree &other);
+  HuffmanTree &operator=(HuffmanTree &other) = delete;
+
   ~HuffmanTree();
 
   HuffmanNode *getRootNode();
 
-  int getCodeLen(unsigned char ch);
+  int getCodeLen(unsigned char ch) const;
 
-  unsigned char* generateTable();
+  std::vector<char> generateTable() const;
+  void normalize();
 
   void print();
   void printTable();
-  bool tryInsertLeftmost(unsigned char ch, int len);
 };
 
 #endif

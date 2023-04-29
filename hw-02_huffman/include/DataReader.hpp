@@ -6,11 +6,11 @@
 
 class DataReader {
 private:
-  HuffmanTree *_tree;
+  HuffmanTree &_tree;
   BitReader _reader;
 
 public:
-  DataReader(HuffmanTree *tree, BitReader reader);
+  DataReader(HuffmanTree &tree, BitReader reader);
 
   bool tryReadChar(unsigned char &ch);
   unsigned char readChar();

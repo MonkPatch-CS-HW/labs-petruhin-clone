@@ -6,11 +6,11 @@
 
 class DataWriter {
 private:
-  HuffmanTree *_tree;
+  HuffmanTree &_tree;
   BitWriter _writer;
 
 public:
-  DataWriter(HuffmanTree *tree, BitWriter writer);
+  DataWriter(HuffmanTree &tree, BitWriter writer);
 
   bool tryWriteChar(unsigned char ch);
   void writeChar(unsigned char ch);

@@ -11,24 +11,24 @@ int main() {
     std::ifstream ifile("ifile.bin", std::ios::binary | std::ios::in);
     std::ofstream mfile("mfile.bin", std::ios::binary | std::ios::out);
     ifile.seekg(0, std::ios::end);
-    std::streamsize size = ifile.tellg();
+    size_t size = ifile.tellg();
     ifile.seekg(0, std::ios::beg);
 
-    char *buffer = new char[size];
-    if (!ifile.read(buffer, size))
+    std::vector<char> buffer(size);
+    if (!ifile.read(buffer.data(), size))
       throw std::logic_error(std::string("TODO"));
 
-    hc.compress(buffer, size, mfile);
+    hc.compress(buffer, mfile);
   }
   {
     std::ifstream mfile("mfile.bin", std::ios::binary | std::ios::in);
     std::ofstream ofile("ofile.bin", std::ios::binary | std::ios::out);
     mfile.seekg(0, std::ios::beg);
 
-    char *buffer = nullptr;
-    size_t n = hc.decompress(buffer, mfile);
+    std::vector<char> buffer;
+    hc.decompress(mfile, buffer);
 
-    ofile.write(buffer, n);
+    ofile.write(buffer.data(), buffer.size());
   }
   return 0;
 }

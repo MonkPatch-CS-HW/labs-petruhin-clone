@@ -4,11 +4,11 @@
 #include "DataWriter.hpp"
 #include "HuffmanNode.hpp"
 
-DataWriter::DataWriter(HuffmanTree *tree, BitWriter writer)
+DataWriter::DataWriter(HuffmanTree &tree, BitWriter writer)
     : _tree(tree), _writer(writer) {}
 
 bool DataWriter::tryWriteChar(unsigned char ch) {
-  HuffmanNode *node = _tree->getRootNode();
+  HuffmanNode *node = _tree.getRootNode();
   while (!node->isEmpty()) {
     HuffmanNode *next = node->select(ch);
 

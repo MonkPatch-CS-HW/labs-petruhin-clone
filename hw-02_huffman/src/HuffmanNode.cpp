@@ -115,14 +115,11 @@ std::set<unsigned char> HuffmanNode::getCharset() { return _charset; }
 bool HuffmanNode::hasChar(unsigned char ch) { return _charset.count(ch) > 0; }
 
 void HuffmanNode::changeChar(unsigned char oldCh, unsigned char newCh) {
-  // std::cout << "ChangeChar { " << oldCh << ", " << newCh << " };" <<
-  // std::endl;
   removeChar(oldCh);
   addChar(newCh);
 }
 
 void HuffmanNode::addChar(unsigned char ch) {
-  // std::cout << "AddChar { " << ch << " };" << std::endl;
   _charset.insert(ch);
 
   if (!isRoot())
@@ -130,7 +127,6 @@ void HuffmanNode::addChar(unsigned char ch) {
 }
 
 void HuffmanNode::removeChar(unsigned char ch) {
-  // std::cout << "RemoveChar { " << ch << " };" << std::endl;
   _charset.erase(ch);
 
   if (!isRoot())
@@ -138,7 +134,6 @@ void HuffmanNode::removeChar(unsigned char ch) {
 }
 
 void HuffmanNode::initChar(unsigned char ch) {
-  // std::cout << "InitChar { " << ch << " };" << std::endl;
   if (!this->isEmpty())
     throw std::logic_error(std::string("TODO"));
 
@@ -147,7 +142,6 @@ void HuffmanNode::initChar(unsigned char ch) {
 }
 
 unsigned char HuffmanNode::getChar() {
-  // std::cout << "GetChar { };" << std::endl;
   if (!this->isLeaf())
     throw std::logic_error(std::string("TODO"));
 
@@ -155,7 +149,6 @@ unsigned char HuffmanNode::getChar() {
 }
 
 void HuffmanNode::setChar(unsigned char ch) {
-  // std::cout << "SetChar { " << ch << " };" << std::endl;
   if (this->isEmpty())
     return initChar(ch);
 
