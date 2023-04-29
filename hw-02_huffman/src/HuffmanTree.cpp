@@ -1,10 +1,11 @@
-#include "HuffmanTree.hpp"
-#include "HuffmanNode.hpp"
 #include <algorithm>
 #include <iostream>
 #include <map>
 #include <numeric>
 #include <set>
+
+#include "HuffmanTree.hpp"
+#include "HuffmanNode.hpp"
 
 HuffmanTree::HuffmanTree(HuffmanNode *rootNode) : _rootNode(rootNode) {}
 
@@ -26,15 +27,8 @@ findToCombine(std::set<HuffmanNode *> nodeset) {
     }
 
     if (smallest != nullptr && secondSmallest != nullptr &&
-        secondSmallest->getCount() < smallest->getCount()) {
-      std::cout << "1!" << std::endl;
-      HuffmanNode *tmp = secondSmallest;
-      std::cout << "2!" << std::endl;
-      secondSmallest = smallest;
-      std::cout << "3!" << std::endl;
-      smallest = tmp;
-      std::cout << "4!" << std::endl;
-    }
+        secondSmallest->getCount() < smallest->getCount())
+      std::swap(smallest, secondSmallest);
   }
   return std::pair<HuffmanNode *, HuffmanNode *>(smallest, secondSmallest);
 }
@@ -58,10 +52,6 @@ HuffmanTree *HuffmanTree::fromText(std::string string) {
     auto [first, second] = findToCombine(nodeset);
     std::string strFirst = first->charsetString();
     std::string strSecond = second->charsetString();
-    std::cout << "Joining { [" << first->getCount() << "] " << strFirst
-              << " } and "
-              << "{ [" << second->getCount() << "] " << strSecond << " };"
-              << std::endl;
 
     HuffmanNode *joined = first->join(second);
     joined->print();

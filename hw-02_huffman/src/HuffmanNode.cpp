@@ -1,8 +1,9 @@
-#include "HuffmanNode.hpp"
 #include <algorithm>
 #include <exception>
 #include <iostream>
 #include <numeric>
+
+#include "HuffmanNode.hpp"
 
 HuffmanNode::HuffmanNode(std::set<char> charset, int count, HuffmanNode *parent)
     : _left(nullptr), _right(nullptr), _parent(nullptr),
