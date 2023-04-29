@@ -5,22 +5,26 @@
 
 #include "HuffmanNode.hpp"
 
-HuffmanNode::HuffmanNode(std::set<char> charset, int count, HuffmanNode *parent)
+HuffmanNode::HuffmanNode(std::set<unsigned char> charset, int count, HuffmanNode *parent)
     : _left(nullptr), _right(nullptr), _parent(nullptr),
-      _charset(std::move(charset)), _count(count) {}
+      _charset(std::move(charset)), _count(count) {
+      }
 
-HuffmanNode::HuffmanNode(char ch, int count, HuffmanNode *parent)
+HuffmanNode::HuffmanNode(unsigned char ch, int count, HuffmanNode *parent)
     : _left(nullptr), _right(nullptr), _parent(nullptr),
-      _charset(std::set<char>{ch}), _count(count) {}
+      _charset(std::set<unsigned char>{ch}), _count(count) {
+      }
 
 HuffmanNode::HuffmanNode(HuffmanNode *parent)
     : _left(nullptr), _right(nullptr), _parent(parent),
-      _charset(std::set<char>()), _count(0) {}
+      _charset(std::set<unsigned char>()), _count(0) {
+      }
 
 HuffmanNode::HuffmanNode(HuffmanNode *left, HuffmanNode *right,
-                         HuffmanNode *parent, std::set<char> charset, int count)
+                         HuffmanNode *parent, std::set<unsigned char> charset, int count)
     : _left(left), _right(right), _parent(parent), _charset(std::move(charset)),
-      _count(count) {}
+      _count(count) {
+      }
 
 HuffmanNode::~HuffmanNode() {
   delete _left;
@@ -28,21 +32,28 @@ HuffmanNode::~HuffmanNode() {
 }
 
 HuffmanNode *HuffmanNode::join(HuffmanNode *other) {
-  std::set<char> newset;
+  std::set<unsigned char> newset;
   std::merge(_charset.begin(), _charset.end(), other->_charset.begin(),
              other->_charset.end(), std::inserter(newset, newset.begin()));
-  return new HuffmanNode(this, other, _parent, newset, _count + other->_count);
+  HuffmanNode *newNode = new HuffmanNode(this, other, _parent, newset, _count + other->_count);
+  _parent = newNode;
+  other->_parent = newNode;
+  return newNode;
 }
 
-std::string HuffmanNode::charsetString() {
-  return std::accumulate(_charset.begin(), _charset.end(), std::string());
+std::string HuffmanNode::charsetString() const {
+  std::string result;
+  for (auto ch : _charset)
+    result.push_back(ch);
+
+  return result;
 }
 
 void HuffmanNode::print(std::string prefix, bool isLeft) const {
   std::cout << prefix;
   std::cout << (isLeft ? "├──" : "└──");
   std::string str =
-      std::accumulate(_charset.begin(), _charset.end(), std::string());
+      charsetString();
   std::cout << str << " (" << _count << ")" << std::endl;
 
   if (_left != nullptr)
@@ -51,7 +62,11 @@ void HuffmanNode::print(std::string prefix, bool isLeft) const {
     _right->print(prefix + (isLeft ? "│   " : "    "), false);
 }
 
-HuffmanNode *HuffmanNode::select(char ch) {
+HuffmanNode *HuffmanNode::getChild(bool right) {
+  return right ? getRight() : getLeft();
+}
+
+HuffmanNode *HuffmanNode::select(unsigned char ch) {
   HuffmanNode *left = getLeft();
   HuffmanNode *right = getRight();
 
@@ -64,7 +79,7 @@ HuffmanNode *HuffmanNode::select(char ch) {
   return nullptr;
 }
 
-bool HuffmanNode::tryInsertLeftmost(char ch, int len) {
+bool HuffmanNode::tryInsertLeftmost(unsigned char ch, int len) {
   if (len < 0 || (len == 0 && isRoot()))
     return false;
 
@@ -95,18 +110,18 @@ int HuffmanNode::getCount() { return _count; }
 void HuffmanNode::setCount(int count) { _count = count; }
 void HuffmanNode::incCount() { _count += 1; }
 
-std::set<char> HuffmanNode::getCharset() { return _charset; }
+std::set<unsigned char> HuffmanNode::getCharset() { return _charset; }
 
-bool HuffmanNode::hasChar(char ch) { return _charset.count(ch) > 0; }
+bool HuffmanNode::hasChar(unsigned char ch) { return _charset.count(ch) > 0; }
 
-void HuffmanNode::changeChar(char oldCh, char newCh) {
+void HuffmanNode::changeChar(unsigned char oldCh, unsigned char newCh) {
   // std::cout << "ChangeChar { " << oldCh << ", " << newCh << " };" <<
   // std::endl;
   removeChar(oldCh);
   addChar(newCh);
 }
 
-void HuffmanNode::addChar(char ch) {
+void HuffmanNode::addChar(unsigned char ch) {
   // std::cout << "AddChar { " << ch << " };" << std::endl;
   _charset.insert(ch);
 
@@ -114,7 +129,7 @@ void HuffmanNode::addChar(char ch) {
     _parent->addChar(ch);
 }
 
-void HuffmanNode::removeChar(char ch) {
+void HuffmanNode::removeChar(unsigned char ch) {
   // std::cout << "RemoveChar { " << ch << " };" << std::endl;
   _charset.erase(ch);
 
@@ -122,16 +137,16 @@ void HuffmanNode::removeChar(char ch) {
     _parent->removeChar(ch);
 }
 
-void HuffmanNode::initChar(char ch) {
+void HuffmanNode::initChar(unsigned char ch) {
   // std::cout << "InitChar { " << ch << " };" << std::endl;
   if (!this->isEmpty())
     throw std::logic_error(std::string("TODO"));
 
-  _charset = std::set<char>();
+  _charset = std::set<unsigned char>();
   addChar(ch);
 }
 
-char HuffmanNode::getChar() {
+unsigned char HuffmanNode::getChar() {
   // std::cout << "GetChar { };" << std::endl;
   if (!this->isLeaf())
     throw std::logic_error(std::string("TODO"));
@@ -139,7 +154,7 @@ char HuffmanNode::getChar() {
   return *this->_charset.begin();
 }
 
-void HuffmanNode::setChar(char ch) {
+void HuffmanNode::setChar(unsigned char ch) {
   // std::cout << "SetChar { " << ch << " };" << std::endl;
   if (this->isEmpty())
     return initChar(ch);
@@ -147,8 +162,12 @@ void HuffmanNode::setChar(char ch) {
   if (!this->isLeaf())
     throw std::logic_error(std::string("TODO"));
 
-  char oldCh = getChar();
+  unsigned char oldCh = getChar();
   changeChar(oldCh, ch);
+}
+
+HuffmanNode *HuffmanNode::getParent() {
+  return _parent;
 }
 
 HuffmanNode *HuffmanNode::getLeft() {

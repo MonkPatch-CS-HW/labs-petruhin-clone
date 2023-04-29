@@ -4,8 +4,8 @@
 #include <numeric>
 #include <set>
 
-#include "HuffmanTree.hpp"
 #include "HuffmanNode.hpp"
+#include "HuffmanTree.hpp"
 
 HuffmanTree::HuffmanTree(HuffmanNode *rootNode) : _rootNode(rootNode) {}
 
@@ -34,12 +34,12 @@ findToCombine(std::set<HuffmanNode *> nodeset) {
 }
 
 HuffmanTree *HuffmanTree::fromText(std::string string) {
-  std::map<char, HuffmanNode *> nodemap;
+  std::map<unsigned char, HuffmanNode *> nodemap;
   for (auto &ch : string) {
     if (nodemap.count(ch)) {
       nodemap[ch]->incCount();
     } else {
-      std::set<char> charset{ch};
+      std::set<unsigned char> charset{static_cast<unsigned char>(ch)};
       nodemap[ch] = new HuffmanNode(charset, 1);
     }
   }
@@ -53,8 +53,11 @@ HuffmanTree *HuffmanTree::fromText(std::string string) {
     std::string strFirst = first->charsetString();
     std::string strSecond = second->charsetString();
 
+    // first->print();
+    // second->print();
+    // std::cout << "\n\n\n\n";
+
     HuffmanNode *joined = first->join(second);
-    joined->print();
     nodeset.erase(first);
     nodeset.erase(second);
     nodeset.insert(joined);
@@ -63,7 +66,7 @@ HuffmanTree *HuffmanTree::fromText(std::string string) {
   return new HuffmanTree(rootNode);
 }
 
-HuffmanTree *HuffmanTree::fromTable(char *data) {
+HuffmanTree *HuffmanTree::fromTable(unsigned char *data) {
   HuffmanTree *tree = new HuffmanTree();
   for (int i = 0; i < 256; i++) {
     tree->tryInsertLeftmost(i, data[i]);
@@ -71,7 +74,7 @@ HuffmanTree *HuffmanTree::fromTable(char *data) {
   return tree;
 }
 
-int HuffmanTree::getCodeLen(char ch) {
+int HuffmanTree::getCodeLen(unsigned char ch) {
   int len = 0;
   for (HuffmanNode *node = _rootNode; node != nullptr;
        node = node->select(ch), len++) {
@@ -81,13 +84,17 @@ int HuffmanTree::getCodeLen(char ch) {
   return 0;
 }
 
+HuffmanNode *HuffmanTree::getRootNode() {
+  return _rootNode;
+}
+
 void HuffmanTree::print() { _rootNode->print(); }
 void HuffmanTree::printTable() {
-  std::cout << "char table[256] = { ";
+  std::cout << "unsigned char table[256] = { ";
   for (int i = 0; i < 256; i++)
     std::cout << getCodeLen(i) << ", ";
   std::cout << "};" << std::endl;
 }
-bool HuffmanTree::tryInsertLeftmost(char ch, int len) {
+bool HuffmanTree::tryInsertLeftmost(unsigned char ch, int len) {
   return _rootNode->tryInsertLeftmost(ch, len);
 }

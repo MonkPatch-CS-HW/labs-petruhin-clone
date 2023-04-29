@@ -10,39 +10,40 @@ private:
   HuffmanNode *_left;
   HuffmanNode *_right;
   HuffmanNode *_parent;
-  std::set<char> _charset;
+  std::set<unsigned char> _charset;
   int _count;
 
-  bool hasChar(char ch);
-  void addChar(char ch);
-  void changeChar(char oldCh, char newCh);
-  void removeChar(char ch);
+  bool hasChar(unsigned char ch);
+  void addChar(unsigned char ch);
+  void changeChar(unsigned char oldCh, unsigned char newCh);
+  void removeChar(unsigned char ch);
 
 public:
-  HuffmanNode(std::set<char> charset = std::set<char>(), int count = 0,
+  HuffmanNode(std::set<unsigned char> charset = std::set<unsigned char>(), int count = 0,
               HuffmanNode *parent = nullptr);
-  HuffmanNode(char ch = '\0', int count = 0, HuffmanNode *parent = nullptr);
+  HuffmanNode(unsigned char ch = '\0', int count = 0, HuffmanNode *parent = nullptr);
   HuffmanNode(HuffmanNode *parent);
   HuffmanNode(HuffmanNode *left, HuffmanNode *right, HuffmanNode *parent,
-              std::set<char> charset, int count);
+              std::set<unsigned char> charset, int count);
   ~HuffmanNode();
 
   HuffmanNode *join(HuffmanNode *other);
 
-  std::string charsetString();
+  std::string charsetString() const;
   void print(std::string prefix = "", bool isLeft = false) const;
-  bool tryInsertLeftmost(char ch, int len);
+  bool tryInsertLeftmost(unsigned char ch, int len);
 
   HuffmanNode *getLeft();
   HuffmanNode *getRight();
   HuffmanNode *getParent();
-  HuffmanNode *select(char ch);
+  HuffmanNode *getChild(bool right);
+  HuffmanNode *select(unsigned char ch);
 
-  std::set<char> getCharset();
+  std::set<unsigned char> getCharset();
 
-  char getChar();
-  void setChar(char ch);
-  void initChar(char ch);
+  unsigned char getChar();
+  void setChar(unsigned char ch);
+  void initChar(unsigned char ch);
   void clearChar();
 
   int getCount();

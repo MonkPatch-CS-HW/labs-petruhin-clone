@@ -11,6 +11,8 @@ private:
   bool _noRead;
   unsigned char _chunk;
 
+  void readNext();
+
 public:
   BitReader(std::ifstream &fin);
 

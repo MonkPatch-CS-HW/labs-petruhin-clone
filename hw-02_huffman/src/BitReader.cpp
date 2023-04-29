@@ -6,14 +6,17 @@
 BitReader::BitReader(std::ifstream &fin)
     : _fin(fin), _bitsLeft(0), _noRead(false), _chunk(0) {}
 
-void BitReader::flush() {
+void BitReader::readNext() {
   _fin.read((char *)&_chunk, sizeof(unsigned char));
 
   if (!_fin.good())
     _noRead = true;
 
   _bitsLeft = 8;
-  _chunk = 0;
+}
+
+void BitReader::flush() {
+  _bitsLeft = 0;
 }
 
 bool BitReader::tryReadBit(unsigned char &bit) {
@@ -21,10 +24,12 @@ bool BitReader::tryReadBit(unsigned char &bit) {
     return false;
 
   if (_bitsLeft == 0)
-    flush();
+    readNext();
 
   _bitsLeft = (_bitsLeft - 1 + 8) % 8;
   bit = (_chunk >> _bitsLeft) & 0b1;
+
+  std::cout << "next bit = " << bit << std::endl;
 
   return true;
 }
