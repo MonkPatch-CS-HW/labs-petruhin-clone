@@ -1,8 +1,10 @@
 #ifndef HUFFMAN_TREE_HPP
 #define HUFFMAN_TREE_HPP
 
-#include "HuffmanNode.hpp"
 #include <string>
+
+#include "HuffmanNode.hpp"
+
 class HuffmanTree {
 private:
   HuffmanNode *_rootNode;
