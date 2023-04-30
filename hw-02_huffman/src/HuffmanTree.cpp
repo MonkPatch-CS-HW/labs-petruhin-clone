@@ -54,6 +54,9 @@ HuffmanTree HuffmanTree::fromBuffer(const std::vector<char> &buffer) {
   for (auto &[key, value] : nodemap)
     nodeset.insert(value);
 
+  if (nodeset.size() == 1)
+    nodeset.insert(new HuffmanNode(nullptr));
+
   while (nodeset.size() > 1) {
     auto [first, second] = findToCombine(nodeset);
     std::string strFirst = first->charsetString();
