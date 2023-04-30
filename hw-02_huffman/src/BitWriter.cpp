@@ -1,4 +1,5 @@
 #include <exception>
+#include <iostream>
 #include <stdexcept>
 
 #include "BitWriter.hpp"
@@ -12,15 +13,17 @@ void BitWriter::writeNext() {
   if (!_fout.good())
     throw std::runtime_error("could not write chunk");
 
-  _bitsLeft = 8;
+  _bitsLeft = 0;
   _chunk = 0;
 
   _bytesWritten++;
 }
 
 size_t BitWriter::flush() {
-  if (_bitsLeft != 0)
+  if (_bitsLeft != 0) {
+    std::cout << "Flushing with bits left: " << _bitsLeft << std::endl;
     writeNext();
+  }
 
   size_t result = _bytesWritten;
   _bytesWritten = 0;

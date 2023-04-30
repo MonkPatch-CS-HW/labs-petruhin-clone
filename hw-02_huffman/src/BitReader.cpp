@@ -12,7 +12,7 @@ void BitReader::readNext() {
   if (!_fin.good())
     throw std::runtime_error("could not read chunk");
 
-  _bitsLeft = 8;
+  _bitsLeft = 0;
 
   _bytesRead++;
 }
