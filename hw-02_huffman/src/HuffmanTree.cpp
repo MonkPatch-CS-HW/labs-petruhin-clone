@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <chrono>
 #include <iostream>
 #include <map>
 #include <numeric>
@@ -76,11 +77,18 @@ HuffmanTree HuffmanTree::fromTable(const std::vector<char> &table) {
 }
 
 HuffmanNode *HuffmanTree::nodeFromTable(const std::vector<char> &table) {
+  std::chrono::time_point<std::chrono::system_clock> now =
+      std::chrono::system_clock::now();
+
   HuffmanNode *rootNode = new HuffmanNode(nullptr);
   for (int i = 0; i < 256; i++) {
     rootNode->tryInsertLeftmost(i, table[i]);
   }
 
+  std::chrono::time_point<std::chrono::system_clock> end =
+      std::chrono::system_clock::now();
+  std::cout << "nodeFromTable() took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - now).count()
+            << "ms of time" << std::endl;
   return rootNode;
 }
 
@@ -119,9 +127,15 @@ void HuffmanTree::printTable() {
 }
 
 std::vector<char> HuffmanTree::generateTable() const {
+  std::chrono::time_point<std::chrono::system_clock> now =
+      std::chrono::system_clock::now();
   std::vector<char> table(256);
   for (int i = 0; i < 256; i++)
     table[i] = getCodeLen(i);
+  std::chrono::time_point<std::chrono::system_clock> end =
+      std::chrono::system_clock::now();
+  std::cout << "generateTable() took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - now).count()
+            << "ms of time" << std::endl;
   return table;
 }
 
