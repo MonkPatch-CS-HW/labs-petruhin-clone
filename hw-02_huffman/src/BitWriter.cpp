@@ -19,7 +19,8 @@ void BitWriter::writeNext() {
 }
 
 size_t BitWriter::flush() {
-  writeNext();
+  if (_bitsLeft != 0)
+    writeNext();
 
   size_t result = _bytesWritten;
   _bytesWritten = 0;
