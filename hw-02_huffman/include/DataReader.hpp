@@ -12,7 +12,6 @@ private:
 public:
   DataReader(HuffmanTree &tree, BitReader reader);
 
-  bool tryReadChar(unsigned char &ch);
   unsigned char readChar();
 
   size_t flush();

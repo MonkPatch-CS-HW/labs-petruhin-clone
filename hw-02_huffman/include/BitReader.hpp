@@ -8,7 +8,6 @@ class BitReader {
 private:
   std::ifstream &_fin;
   int _bitsLeft;
-  bool _noRead;
   unsigned char _chunk;
   size_t _bytesRead;
 
@@ -17,7 +16,6 @@ private:
 public:
   BitReader(std::ifstream &fin);
 
-  bool tryReadBit(unsigned char &bit);
   unsigned char readBit();
 
   size_t flush();

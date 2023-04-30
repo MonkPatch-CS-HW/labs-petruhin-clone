@@ -1,3 +1,5 @@
 /obj/
 /hw-02_huffman
 /**/*.bin
+/**/*.png
+/**/*.txt

@@ -13,7 +13,6 @@ private:
 public:
   DataWriter(HuffmanTree &tree, BitWriter writer);
 
-  bool tryWriteChar(unsigned char ch);
   void writeChar(unsigned char ch);
 
   size_t flush();

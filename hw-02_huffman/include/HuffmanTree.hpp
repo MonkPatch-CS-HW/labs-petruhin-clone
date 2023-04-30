@@ -30,9 +30,8 @@ public:
   int getCodeLen(unsigned char ch) const;
 
   std::vector<char> generateTable() const;
-  void normalize();
+  std::vector<char> normalize();
 
-  void print();
   void printTable();
 };
 

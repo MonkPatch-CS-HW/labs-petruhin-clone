@@ -15,7 +15,7 @@ HuffmanCompressor::compress(std::ifstream &fin, std::ofstream &fout) {
 
   std::vector<char> buffer(size);
   if (!fin.read(buffer.data(), size))
-    throw std::logic_error(std::string("TODO"));
+    throw std::runtime_error("could not read from file input");
 
   return compress(buffer, fout);
 }
@@ -23,7 +23,11 @@ HuffmanCompressor::compress(std::ifstream &fin, std::ofstream &fout) {
 HuffmanCompressor::CompressorStats
 HuffmanCompressor::compress(std::vector<char> &buffer, std::ofstream &fout) {
   HuffmanTree ht = HuffmanTree::fromBuffer(buffer);
-  std::vector<char> table = ht.generateTable();
+  std::vector<char> table = ht.normalize();
+
+  std::ofstream tablefout("table_in.txt");
+  ht.getRootNode()->print(tablefout);
+
   size_t size = buffer.size();
 
   fout.write((char *)table.data(), 256);
@@ -49,7 +53,8 @@ HuffmanCompressor::decompress(std::ifstream &fin, std::ofstream &fout) {
   std::vector<char> buffer;
   CompressorStats result = decompress(fin, buffer);
 
-  fout.write(buffer.data(), buffer.size());
+  if (!fout.write(buffer.data(), buffer.size()))
+    throw std::runtime_error("could not write to file output");
 
   return result;
 }
@@ -65,6 +70,10 @@ HuffmanCompressor::decompress(std::ifstream &fin, std::vector<char> &buffer) {
   buffer = std::vector<char>(size);
 
   HuffmanTree ht = HuffmanTree::fromTable(table);
+
+  std::ofstream tablefout("table_out.txt");
+  ht.getRootNode()->print(tablefout);
+
   BitReader br(fin);
   DataReader dr(ht, br);
 

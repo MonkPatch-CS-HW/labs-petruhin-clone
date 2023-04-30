@@ -4,15 +4,13 @@
 #include "BitReader.hpp"
 
 BitReader::BitReader(std::ifstream &fin)
-    : _fin(fin), _bitsLeft(0), _noRead(false), _chunk(0), _bytesRead(0) {}
+    : _fin(fin), _bitsLeft(0), _chunk(0), _bytesRead(0) {}
 
 void BitReader::readNext() {
   _fin.read((char *)&_chunk, sizeof(unsigned char));
 
-  if (!_fin.good()) {
-    _noRead = true;
-    return;
-  }
+  if (!_fin.good())
+    throw std::runtime_error("could not read chunk");
 
   _bitsLeft = 8;
 
@@ -28,25 +26,13 @@ size_t BitReader::flush() {
   return result;
 }
 
-bool BitReader::tryReadBit(unsigned char &bit) {
-  if (_noRead)
-    return false;
-
+unsigned char BitReader::readBit() {
   if (_bitsLeft == 0)
     readNext();
 
   _bitsLeft = (_bitsLeft - 1 + 8) % 8;
-  bit = (_chunk >> _bitsLeft) & 0b1;
 
-  return true;
-}
-
-unsigned char BitReader::readBit() {
-  unsigned char bit;
-  if (tryReadBit(bit))
-    return bit;
-
-  throw std::logic_error("TODO");
+  return (_chunk >> _bitsLeft) & 0b1;
 }
 
 void BitReader::close() { _fin.close(); }

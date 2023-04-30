@@ -1,8 +1,8 @@
 #ifndef CLI_ARGUMENTS_HPP
 #define CLI_ARGUMENTS_HPP
 
-#include <string>
 #include <cstring>
+#include <string>
 
 struct CliArguments {
 public:

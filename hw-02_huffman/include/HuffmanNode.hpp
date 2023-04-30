@@ -19,9 +19,10 @@ private:
   void removeChar(unsigned char ch);
 
 public:
-  HuffmanNode(std::set<unsigned char> charset = std::set<unsigned char>(), int count = 0,
+  HuffmanNode(std::set<unsigned char> charset = std::set<unsigned char>(),
+              int count = 0, HuffmanNode *parent = nullptr);
+  HuffmanNode(unsigned char ch = '\0', int count = 0,
               HuffmanNode *parent = nullptr);
-  HuffmanNode(unsigned char ch = '\0', int count = 0, HuffmanNode *parent = nullptr);
   HuffmanNode(HuffmanNode *parent);
   HuffmanNode(HuffmanNode *left, HuffmanNode *right, HuffmanNode *parent,
               std::set<unsigned char> charset, int count);
@@ -31,6 +32,10 @@ public:
 
   std::string charsetString() const;
   void print(std::string prefix = "", bool isLeft = false) const;
+  void print(std::ostream &out, std::string prefix = "",
+             bool isLeft = false) const;
+  void print(std::ofstream &out, std::string prefix = "",
+             bool isLeft = false) const;
   bool tryInsertLeftmost(unsigned char ch, int len);
 
   HuffmanNode *getLeft();

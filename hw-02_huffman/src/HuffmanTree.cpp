@@ -8,9 +8,7 @@
 #include "HuffmanNode.hpp"
 #include "HuffmanTree.hpp"
 
-HuffmanTree::HuffmanTree(HuffmanNode *rootNode) : _rootNode(rootNode) {
-  normalize();
-}
+HuffmanTree::HuffmanTree(HuffmanNode *rootNode) : _rootNode(rootNode) {}
 
 HuffmanTree::HuffmanTree(const HuffmanTree &other)
     : HuffmanTree(nodeFromTable(other.generateTable())) {}
@@ -95,15 +93,16 @@ int HuffmanTree::getCodeLen(unsigned char ch) const {
   return 0;
 }
 
-void HuffmanTree::normalize() {
-  HuffmanNode *rootNode = nodeFromTable(generateTable());
+std::vector<char> HuffmanTree::normalize() {
+  std::vector<char> table = generateTable();
+
   delete _rootNode;
-  _rootNode = rootNode;
+  _rootNode = nodeFromTable(table);
+
+  return table;
 }
 
 HuffmanNode *HuffmanTree::getRootNode() { return _rootNode; }
-
-void HuffmanTree::print() { _rootNode->print(); }
 
 void HuffmanTree::printTable() {
   std::vector<char> table = generateTable();

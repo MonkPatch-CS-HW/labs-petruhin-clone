@@ -1,4 +1,6 @@
 #include <fstream>
+#include <iostream>
+#include <sstream>
 
 #include "DataReader.hpp"
 #include "HuffmanNode.hpp"
@@ -6,31 +8,22 @@
 DataReader::DataReader(HuffmanTree &tree, BitReader reader)
     : _tree(tree), _reader(reader) {}
 
-bool DataReader::tryReadChar(unsigned char &ch) {
+unsigned char DataReader::readChar() {
   HuffmanNode *node = _tree.getRootNode();
-  unsigned char bit;
+
+  std::stringstream code;
 
   while (!node->isEmpty()) {
-    if (!_reader.tryReadBit(bit))
-      return false;
+    unsigned char bit = _reader.readBit();
+    code << (int)bit;
 
     node = node->getChild(bit);
 
-    if (node->isLeaf()) {
-      ch = node->getChar();
-      return true;
-    }
+    if (node->isLeaf())
+      return node->getChar();
   }
 
-  return false;
-}
-
-unsigned char DataReader::readChar() {
-  unsigned char ch;
-  if (!tryReadChar(ch))
-    throw std::logic_error(std::string("TODO"));
-
-  return ch;
+  throw std::runtime_error("could not read character from compressed stream");
 }
 
 size_t DataReader::flush() { return _reader.flush(); }
