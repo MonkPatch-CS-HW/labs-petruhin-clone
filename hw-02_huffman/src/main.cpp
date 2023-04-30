@@ -48,6 +48,7 @@ int main(int argc, char **argv) {
       stats = hc.compress(fin, fout);
     } catch (std::exception &ex) {
       std::cerr << "error compressing file: " << ex.what() << std::endl;
+      return 1;
     }
     break;
   case CliArguments::MODE_DECOMPRESS:
@@ -55,6 +56,7 @@ int main(int argc, char **argv) {
       stats = hc.decompress(fin, fout);
     } catch (std::exception &ex) {
       std::cerr << "error decompressing file: " << ex.what() << std::endl;
+      return 1;
     }
     break;
   default:
