@@ -4,19 +4,28 @@
 #include "BitReader.hpp"
 
 BitReader::BitReader(std::ifstream &fin)
-    : _fin(fin), _bitsLeft(0), _noRead(false), _chunk(0) {}
+    : _fin(fin), _bitsLeft(0), _noRead(false), _chunk(0), _bytesRead(0) {}
 
 void BitReader::readNext() {
   _fin.read((char *)&_chunk, sizeof(unsigned char));
 
-  if (!_fin.good())
+  if (!_fin.good()) {
     _noRead = true;
+    return;
+  }
 
   _bitsLeft = 8;
+
+  _bytesRead++;
 }
 
-void BitReader::flush() {
+size_t BitReader::flush() {
   _bitsLeft = 0;
+
+  size_t result = _bytesRead;
+  _bytesRead = 0;
+
+  return result;
 }
 
 bool BitReader::tryReadBit(unsigned char &bit) {

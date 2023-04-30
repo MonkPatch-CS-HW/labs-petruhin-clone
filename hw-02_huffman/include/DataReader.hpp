@@ -15,7 +15,7 @@ public:
   bool tryReadChar(unsigned char &ch);
   unsigned char readChar();
 
-  void flush();
+  size_t flush();
 };
 
 #endif

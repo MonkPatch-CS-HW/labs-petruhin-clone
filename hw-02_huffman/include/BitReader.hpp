@@ -10,6 +10,7 @@ private:
   int _bitsLeft;
   bool _noRead;
   unsigned char _chunk;
+  size_t _bytesRead;
 
   void readNext();
 
@@ -19,7 +20,7 @@ public:
   bool tryReadBit(unsigned char &bit);
   unsigned char readBit();
 
-  void flush();
+  size_t flush();
 
   void close();
 };

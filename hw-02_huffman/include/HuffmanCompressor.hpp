@@ -7,16 +7,16 @@
 class HuffmanCompressor {
 public:
   struct CompressorStats {
-    size_t compressedSize;
-    size_t rawSize;
+    size_t sourceSize;
+    size_t processedSize;
     size_t metadataSize;
-    bool success;
   };
 
-  // CompressorStats compress(std::ifstream &fin, std::ofstream &fout);
+  CompressorStats compress(std::ifstream &fin, std::ofstream &fout);
   CompressorStats compress(std::vector<char> &buffer, std::ofstream &fout);
 
   CompressorStats decompress(std::ifstream &fin, std::vector<char> &buffer);
+  CompressorStats decompress(std::ifstream &fin, std::ofstream &fout);
 };
 
 #endif

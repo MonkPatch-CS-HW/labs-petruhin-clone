@@ -10,6 +10,9 @@ private:
   int _bitsLeft;
   bool _noWrite;
   unsigned char _chunk;
+  size_t _bytesWritten;
+
+  void writeNext();
 
 public:
   BitWriter(std::ofstream &fout);
@@ -17,7 +20,7 @@ public:
   bool tryWriteBit(unsigned char bit);
   void writeBit(unsigned char bit);
 
-  void flush();
+  size_t flush();
 
   void close();
 };

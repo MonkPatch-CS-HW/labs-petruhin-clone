@@ -31,4 +31,4 @@ void DataWriter::writeChar(unsigned char ch) {
     throw std::logic_error(std::string("TODO"));
 }
 
-void DataWriter::flush() { _writer.flush(); }
+size_t DataWriter::flush() { return _writer.flush(); }

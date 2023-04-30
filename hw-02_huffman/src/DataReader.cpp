@@ -3,7 +3,8 @@
 #include "DataReader.hpp"
 #include "HuffmanNode.hpp"
 
-DataReader::DataReader(HuffmanTree &tree, BitReader reader) : _tree(tree), _reader(reader) {}
+DataReader::DataReader(HuffmanTree &tree, BitReader reader)
+    : _tree(tree), _reader(reader) {}
 
 bool DataReader::tryReadChar(unsigned char &ch) {
   HuffmanNode *node = _tree.getRootNode();
@@ -15,7 +16,7 @@ bool DataReader::tryReadChar(unsigned char &ch) {
 
     node = node->getChild(bit);
 
-    if (node->isLeaf()){
+    if (node->isLeaf()) {
       ch = node->getChar();
       return true;
     }
@@ -32,6 +33,4 @@ unsigned char DataReader::readChar() {
   return ch;
 }
 
-void DataReader::flush() {
-  _reader.flush();
-}
+size_t DataReader::flush() { return _reader.flush(); }

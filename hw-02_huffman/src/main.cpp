@@ -1,34 +1,47 @@
 #include <cstring>
+#include <fstream>
 #include <iostream>
 
+#include "CliArguments.hpp"
 #include "HuffmanCompressor.hpp"
 
 using namespace std;
 
-int main() {
+int main(int argc, char **argv) {
   HuffmanCompressor hc;
-  {
-    std::ifstream ifile("ifile.bin", std::ios::binary | std::ios::in);
-    std::ofstream mfile("mfile.bin", std::ios::binary | std::ios::out);
-    ifile.seekg(0, std::ios::end);
-    size_t size = ifile.tellg();
-    ifile.seekg(0, std::ios::beg);
+  CliArguments args;
 
-    std::vector<char> buffer(size);
-    if (!ifile.read(buffer.data(), size))
-      throw std::logic_error(std::string("TODO"));
+  HuffmanCompressor::CompressorStats stats;
+  args.parse(argc, argv);
 
-    hc.compress(buffer, mfile);
+  if (args.inputFile.size() == 0) {
+    std::cerr << "Specify input file with -f or --file" << std::endl;
+    return 1;
   }
-  {
-    std::ifstream mfile("mfile.bin", std::ios::binary | std::ios::in);
-    std::ofstream ofile("ofile.bin", std::ios::binary | std::ios::out);
-    mfile.seekg(0, std::ios::beg);
 
-    std::vector<char> buffer;
-    hc.decompress(mfile, buffer);
-
-    ofile.write(buffer.data(), buffer.size());
+  if (args.outputFile.size() == 0) {
+    std::cerr << "Specify output file with -o or --output" << std::endl;
+    return 1;
   }
+
+  std::ifstream fin(args.inputFile);
+  std::ofstream fout(args.outputFile);
+
+  switch (args.mode) {
+  case CliArguments::MODE_COMPRESS:
+    stats = hc.compress(fin, fout);
+    break;
+  case CliArguments::MODE_DECOMPRESS:
+    stats = hc.decompress(fin, fout);
+    break;
+  default:
+    std::cerr << "Specify mode with -c or -u" << std::endl;
+    return 1;
+  }
+
+  std::cout << stats.sourceSize << std::endl
+            << stats.processedSize << std::endl
+            << stats.metadataSize << std::endl;
+
   return 0;
 }

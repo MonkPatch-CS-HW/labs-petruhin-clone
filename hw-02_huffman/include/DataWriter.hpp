@@ -8,6 +8,7 @@ class DataWriter {
 private:
   HuffmanTree &_tree;
   BitWriter _writer;
+  size_t _bytesWritten;
 
 public:
   DataWriter(HuffmanTree &tree, BitWriter writer);
@@ -15,7 +16,7 @@ public:
   bool tryWriteChar(unsigned char ch);
   void writeChar(unsigned char ch);
 
-  void flush();
+  size_t flush();
 };
 
 #endif
