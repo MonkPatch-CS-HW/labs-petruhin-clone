@@ -45,8 +45,6 @@ HuffmanCompressor::compress(std::vector<char> &buffer, std::ofstream &fout) {
 
 HuffmanCompressor::CompressorStats
 HuffmanCompressor::decompress(std::ifstream &fin, std::ofstream &fout) {
-  fin.seekg(0, std::ios::beg);
-
   std::vector<char> buffer;
   CompressorStats result = decompress(fin, buffer);
 
