@@ -9,8 +9,8 @@
 #include "HuffmanNode.hpp"
 #include "HuffmanTree.hpp"
 
-HuffmanTree::HuffmanTree(HuffmanNode *rootNode)
-    : _rootNode(rootNode), _consistent(false) {
+HuffmanTree::HuffmanTree(HuffmanNode *rootNode, bool consistent)
+    : _rootNode(rootNode), _consistent(consistent) {
   normalize();
 }
 
@@ -88,7 +88,7 @@ HuffmanTree HuffmanTree::fromBuffer(const std::vector<char> &buffer) {
 }
 
 HuffmanTree HuffmanTree::fromTable(const std::vector<unsigned char> &table) {
-  return HuffmanTree::nodeFromTable(table);
+  return HuffmanTree(HuffmanTree::nodeFromTable(table), true);
 }
 
 HuffmanNode *
@@ -103,7 +103,7 @@ HuffmanTree::nodeFromTable(const std::vector<unsigned char> &table) {
 int HuffmanTree::getCodeLen(unsigned char ch) const {
   int len = 0;
   for (const HuffmanNode *node = _rootNode; node != nullptr;
-       node = node->select(ch), len++) {
+       (node = node->select(ch)) && node != nullptr, len++) {
 
     if (node->isLeaf() && node->getChar() == ch)
       return len;
@@ -112,22 +112,18 @@ int HuffmanTree::getCodeLen(unsigned char ch) const {
   return 0;
 }
 
-std::vector<unsigned char> HuffmanTree::normalize() {
-  std::vector<unsigned char> table = generateTable();
+void HuffmanTree::normalize() {
+  _table = generateTable();
 
   delete _rootNode;
-  _rootNode = nodeFromTable(table);
+  _rootNode = nodeFromTable(_table);
 
   _consistent = true;
-
-  return table;
 }
 
 const std::vector<unsigned char> &HuffmanTree::getTable() {
-  if (!_consistent) {
+  if (!_consistent)
     normalize();
-    _table = generateTable();
-  }
 
   return _table;
 }

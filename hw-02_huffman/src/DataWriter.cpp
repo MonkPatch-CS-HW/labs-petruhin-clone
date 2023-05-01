@@ -22,7 +22,7 @@ std::vector<unsigned char> DataWriter::findHuffmanCode(unsigned char ch) {
   std::vector<unsigned char> code;
   const HuffmanNode *node = _tree.getRootNode();
 
-  while (!node->isEmpty()) {
+  while (node != nullptr) {
     const HuffmanNode *next = node->select(ch);
 
     if (next == nullptr)

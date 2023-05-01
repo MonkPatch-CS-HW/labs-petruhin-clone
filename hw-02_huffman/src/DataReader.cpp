@@ -14,11 +14,14 @@ unsigned char DataReader::readChar() {
 
   std::stringstream code;
 
-  while (!node->isEmpty()) {
+  while (node != nullptr) {
     unsigned char bit = _reader.readBit();
     code << (int)bit;
 
     node = node->getChild(bit);
+    if (node == nullptr)
+      throw DecodingException(
+          "could not read character from compressed stream");
 
     if (node->isLeaf())
       return node->getChar();

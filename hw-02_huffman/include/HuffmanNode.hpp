@@ -41,10 +41,6 @@ public:
   const HuffmanNode *getChild(bool right) const;
   const HuffmanNode *select(unsigned char ch) const;
 
-  HuffmanNode *fetchLeft();
-  HuffmanNode *fetchRight();
-  HuffmanNode *fetchChild(bool right);
-
   std::set<unsigned char> getCharset() const;
 
   bool hasChar(unsigned char ch) const;
