@@ -12,11 +12,11 @@ private:
   std::vector<char> _cachedTable;
 
   bool tryInsertLeftmost(unsigned char ch, int len);
-  static HuffmanNode *nodeFromTable(const std::vector<char> &table);
+  static HuffmanNode *nodeFromTable(const std::vector<unsigned char> &table);
 
 public:
   static HuffmanTree fromBuffer(const std::vector<char> &buffer);
-  static HuffmanTree fromTable(const std::vector<char> &table);
+  static HuffmanTree fromTable(const std::vector<unsigned char> &table);
 
   HuffmanTree(HuffmanNode *rootNode = new HuffmanNode(nullptr));
 
@@ -31,8 +31,8 @@ public:
 
   int getCodeLen(unsigned char ch) const;
 
-  std::vector<char> generateTable() const;
-  std::vector<char> normalize();
+  std::vector<unsigned char> generateTable() const;
+  std::vector<unsigned char> normalize();
 
   void printTable();
 };

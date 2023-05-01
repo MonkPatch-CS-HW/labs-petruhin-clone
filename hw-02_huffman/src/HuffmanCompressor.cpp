@@ -24,7 +24,7 @@ HuffmanCompressor::compress(std::istream &in, std::ostream &out) {
 HuffmanCompressor::CompressorStats
 HuffmanCompressor::compress(std::vector<char> &buffer, std::ostream &out) {
   HuffmanTree ht = HuffmanTree::fromBuffer(buffer);
-  std::vector<char> table = ht.normalize();
+  std::vector<unsigned char> table = ht.normalize();
 
   size_t size = buffer.size();
 
@@ -58,7 +58,7 @@ HuffmanCompressor::decompress(std::istream &in, std::ostream &out) {
 HuffmanCompressor::CompressorStats
 HuffmanCompressor::decompress(std::istream &in, std::vector<char> &buffer) {
   size_t size;
-  std::vector<char> table(256);
+  std::vector<unsigned char> table(256);
 
   in.read((char *)table.data(), 256);
   in.read((char *)&size, sizeof(size_t));

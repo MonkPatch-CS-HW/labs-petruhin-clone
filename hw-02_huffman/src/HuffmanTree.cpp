@@ -76,11 +76,11 @@ HuffmanTree HuffmanTree::fromBuffer(const std::vector<char> &buffer) {
   return HuffmanTree(rootNode);
 }
 
-HuffmanTree HuffmanTree::fromTable(const std::vector<char> &table) {
+HuffmanTree HuffmanTree::fromTable(const std::vector<unsigned char> &table) {
   return HuffmanTree::nodeFromTable(table);
 }
 
-HuffmanNode *HuffmanTree::nodeFromTable(const std::vector<char> &table) {
+HuffmanNode *HuffmanTree::nodeFromTable(const std::vector<unsigned char> &table) {
   // std::chrono::time_point<std::chrono::system_clock> now =
   //     std::chrono::system_clock::now();
 
@@ -108,8 +108,8 @@ int HuffmanTree::getCodeLen(unsigned char ch) const {
   return 0;
 }
 
-std::vector<char> HuffmanTree::normalize() {
-  std::vector<char> table = generateTable();
+std::vector<unsigned char> HuffmanTree::normalize() {
+  std::vector<unsigned char> table = generateTable();
 
   delete _rootNode;
   _rootNode = nodeFromTable(table);
@@ -120,20 +120,20 @@ std::vector<char> HuffmanTree::normalize() {
 HuffmanNode *HuffmanTree::getRootNode() { return _rootNode; }
 
 void HuffmanTree::printTable() {
-  std::vector<char> table = generateTable();
+  std::vector<unsigned char> table = generateTable();
 
   std::cout << "unsigned char table[256] = { ";
 
   for (int i = 0; i < 256; i++)
-    std::cout << table[i] << ", ";
+    std::cout << (int)table[i] << ", ";
 
   std::cout << "};" << std::endl;
 }
 
-std::vector<char> HuffmanTree::generateTable() const {
+std::vector<unsigned char> HuffmanTree::generateTable() const {
   // std::chrono::time_point<std::chrono::system_clock> now =
   //     std::chrono::system_clock::now();
-  std::vector<char> table(256);
+  std::vector<unsigned char> table(256);
   for (int i = 0; i < 256; i++)
     table[i] = getCodeLen(i);
   // std::chrono::time_point<std::chrono::system_clock> end =
