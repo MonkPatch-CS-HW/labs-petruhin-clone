@@ -12,10 +12,10 @@ private:
   HuffmanTree &_tree;
   BitWriter _writer;
   size_t _bytesWritten;
-  std::map<unsigned char, std::vector<unsigned char>> _huffmanCodes;
+  std::vector<unsigned char> _huffmanCodes[256];
 
   std::vector<unsigned char> findHuffmanCode(unsigned char ch);
-  std::vector<unsigned char> getHuffmanCode(unsigned char ch);
+  const std::vector<unsigned char> &getHuffmanCode(unsigned char ch);
   void initHuffmanCodes();
 
 public:

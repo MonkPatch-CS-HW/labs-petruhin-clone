@@ -10,7 +10,7 @@ DataWriter::DataWriter(HuffmanTree &tree, BitWriter writer)
   initHuffmanCodes();
 }
 
-std::vector<unsigned char> DataWriter::getHuffmanCode(unsigned char ch) {
+const std::vector<unsigned char> &DataWriter::getHuffmanCode(unsigned char ch) {
   if (_huffmanCodes[ch].size() == 0)
     throw std::runtime_error("could not find huffman code for a character");
 
@@ -36,7 +36,6 @@ std::vector<unsigned char> DataWriter::findHuffmanCode(unsigned char ch) {
       return code;
   }
 
-  std::cout << "symbol " << ch << std::endl;
   throw std::runtime_error("could not get next bit for a symbol "
                            "(incorrect tree, empty node)");
 }
