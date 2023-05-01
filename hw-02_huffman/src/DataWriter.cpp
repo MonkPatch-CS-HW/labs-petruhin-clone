@@ -50,7 +50,7 @@ void DataWriter::initHuffmanCodes() {
 }
 
 void DataWriter::writeChar(unsigned char ch) {
-  std::vector<unsigned char> code = getHuffmanCode(ch);
+  const std::vector<unsigned char> &code = getHuffmanCode(ch);
 
   for (unsigned char ch : code)
     _writer.writeBit(ch);
