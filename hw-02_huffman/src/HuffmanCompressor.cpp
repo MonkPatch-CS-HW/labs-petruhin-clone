@@ -25,9 +25,6 @@ HuffmanCompressor::compress(std::vector<char> &buffer, std::ofstream &fout) {
   HuffmanTree ht = HuffmanTree::fromBuffer(buffer);
   std::vector<char> table = ht.normalize();
 
-  // std::ofstream tablefout("table_in.txt");
-  // ht.getRootNode()->print(tablefout);
-
   size_t size = buffer.size();
 
   fout.write((char *)table.data(), 256);
@@ -70,9 +67,6 @@ HuffmanCompressor::decompress(std::ifstream &fin, std::vector<char> &buffer) {
   buffer = std::vector<char>(size);
 
   HuffmanTree ht = HuffmanTree::fromTable(table);
-
-  // std::ofstream tablefout("table_out.txt");
-  // ht.getRootNode()->print(tablefout);
 
   BitReader br(fin);
   DataReader dr(ht, br);

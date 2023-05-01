@@ -25,6 +25,8 @@ public:
 
   ~HuffmanTree();
 
+  bool hasChar(unsigned char ch);
+
   HuffmanNode *getRootNode();
 
   int getCodeLen(unsigned char ch) const;

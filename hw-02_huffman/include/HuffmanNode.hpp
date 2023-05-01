@@ -13,7 +13,6 @@ private:
   std::set<unsigned char> _charset;
   int _count;
 
-  bool hasChar(unsigned char ch);
   void addChar(unsigned char ch);
   void changeChar(unsigned char oldCh, unsigned char newCh);
   void removeChar(unsigned char ch);
@@ -45,6 +44,8 @@ public:
   HuffmanNode *select(unsigned char ch);
 
   std::set<unsigned char> getCharset();
+
+  bool hasChar(unsigned char ch);
 
   unsigned char getChar();
   void setChar(unsigned char ch);
