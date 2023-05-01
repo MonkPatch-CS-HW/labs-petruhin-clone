@@ -5,6 +5,7 @@
 #include <numeric>
 #include <sstream>
 
+#include "exceptions.hpp"
 #include "HuffmanNode.hpp"
 
 HuffmanNode::HuffmanNode(std::set<unsigned char> charset, int count,
@@ -153,7 +154,7 @@ void HuffmanNode::removeChar(unsigned char ch) {
 
 void HuffmanNode::initChar(unsigned char ch) {
   if (!this->isEmpty())
-    throw std::logic_error(
+    throw HuffmanNodeException(
         "trying to init char when the node is already not empty");
 
   _charset = std::set<unsigned char>();
@@ -162,7 +163,7 @@ void HuffmanNode::initChar(unsigned char ch) {
 
 unsigned char HuffmanNode::getChar() {
   if (!this->isLeaf())
-    throw std::logic_error(
+    throw HuffmanNodeException(
         "trying to get char of the node which is not a leaf");
 
   return *this->_charset.begin();
@@ -173,7 +174,7 @@ void HuffmanNode::setChar(unsigned char ch) {
     return initChar(ch);
 
   if (!this->isLeaf())
-    throw std::logic_error(
+    throw HuffmanNodeException(
         "trying to set char of the node which is not a leaf");
 
   unsigned char oldCh = getChar();

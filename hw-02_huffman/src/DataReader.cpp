@@ -4,6 +4,7 @@
 
 #include "DataReader.hpp"
 #include "HuffmanNode.hpp"
+#include "exceptions.hpp"
 
 DataReader::DataReader(HuffmanTree &tree, BitReader reader)
     : _tree(tree), _reader(reader) {}
@@ -23,7 +24,7 @@ unsigned char DataReader::readChar() {
       return node->getChar();
   }
 
-  throw std::runtime_error("could not read character from compressed stream");
+  throw DecodingException("could not read character from compressed stream");
 }
 
 size_t DataReader::flush() { return _reader.flush(); }

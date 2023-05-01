@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "exceptions.hpp"
 #include "BitReader.hpp"
 #include "BitWriter.hpp"
 #include "DataReader.hpp"
@@ -15,7 +16,7 @@ HuffmanCompressor::compress(std::ifstream &fin, std::ofstream &fout) {
 
   std::vector<char> buffer(size);
   if (!fin.read(buffer.data(), size))
-    throw std::runtime_error("could not read from file input");
+    throw IOException("could not read from file input");
 
   return compress(buffer, fout);
 }
@@ -49,7 +50,7 @@ HuffmanCompressor::decompress(std::ifstream &fin, std::ofstream &fout) {
   CompressorStats result = decompress(fin, buffer);
 
   if (!fout.write(buffer.data(), buffer.size()))
-    throw std::runtime_error("could not write to file output");
+    throw IOException("could not write to file output");
 
   return result;
 }

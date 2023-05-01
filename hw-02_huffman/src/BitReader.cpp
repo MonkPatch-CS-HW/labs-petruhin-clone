@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "BitReader.hpp"
+#include "exceptions.hpp"
 
 BitReader::BitReader(std::ifstream &fin)
     : _fin(fin), _bitsLeft(0), _chunk(0), _bytesRead(0) {}
@@ -10,7 +11,7 @@ void BitReader::readNext() {
   _fin.read((char *)&_chunk, sizeof(unsigned char));
 
   if (!_fin.good())
-    throw std::runtime_error("could not read chunk");
+    throw IOException("could not read chunk");
 
   _bitsLeft = 0;
 
