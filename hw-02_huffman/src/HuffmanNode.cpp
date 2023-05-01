@@ -5,8 +5,8 @@
 #include <numeric>
 #include <sstream>
 
-#include "exceptions.hpp"
 #include "HuffmanNode.hpp"
+#include "exceptions.hpp"
 
 HuffmanNode::HuffmanNode(std::set<unsigned char> charset, int count,
                          HuffmanNode *parent)
@@ -68,29 +68,12 @@ void HuffmanNode::print(std::ostream &out, std::string prefix,
     _right->print(out, prefix + (isLeft ? "│   " : "    "), false);
 }
 
-HuffmanNode *HuffmanNode::getChild(bool right) {
-  return right ? getRight() : getLeft();
-}
-
-HuffmanNode *HuffmanNode::select(unsigned char ch) {
-  HuffmanNode *left = getLeft();
-  HuffmanNode *right = getRight();
-
-  if (left->hasChar(ch))
-    return left;
-
-  if (right->hasChar(ch))
-    return right;
-
-  return nullptr;
-}
-
 bool HuffmanNode::tryInsertLeftmost(unsigned char ch, int len) {
   if (len < 0 || (len == 0 && isRoot()))
     return false;
 
-  HuffmanNode *left = getLeft();
-  HuffmanNode *right = getRight();
+  HuffmanNode *left = fetchLeft();
+  HuffmanNode *right = fetchRight();
 
   if (len == 0) {
     if (isEmpty()) {
@@ -112,13 +95,15 @@ bool HuffmanNode::tryInsertLeftmost(unsigned char ch, int len) {
   return false;
 }
 
-int HuffmanNode::getCount() { return _count; }
+int HuffmanNode::getCount() const { return _count; }
 void HuffmanNode::setCount(int count) { _count = count; }
 void HuffmanNode::incCount() { _count += 1; }
 
-std::set<unsigned char> HuffmanNode::getCharset() { return _charset; }
+std::set<unsigned char> HuffmanNode::getCharset() const { return _charset; }
 
-bool HuffmanNode::hasChar(unsigned char ch) { return _charset.count(ch) > 0; }
+bool HuffmanNode::hasChar(unsigned char ch) const {
+  return _charset.count(ch) > 0;
+}
 
 void HuffmanNode::changeChar(unsigned char oldCh, unsigned char newCh) {
   removeChar(oldCh);
@@ -148,7 +133,7 @@ void HuffmanNode::initChar(unsigned char ch) {
   addChar(ch);
 }
 
-unsigned char HuffmanNode::getChar() {
+unsigned char HuffmanNode::getChar() const {
   if (!this->isLeaf())
     throw HuffmanNodeException(
         "trying to get char of the node which is not a leaf");
@@ -168,26 +153,51 @@ void HuffmanNode::setChar(unsigned char ch) {
   changeChar(oldCh, ch);
 }
 
-HuffmanNode *HuffmanNode::getParent() { return _parent; }
+const HuffmanNode *HuffmanNode::getParent() const { return _parent; }
 
-HuffmanNode *HuffmanNode::getLeft() {
+const HuffmanNode *HuffmanNode::getLeft() const { return _left; }
+
+const HuffmanNode *HuffmanNode::getRight() const { return _right; }
+
+const HuffmanNode *HuffmanNode::getChild(bool right) const {
+  return right ? getRight() : getLeft();
+}
+
+const HuffmanNode *HuffmanNode::select(unsigned char ch) const {
+  const HuffmanNode *left = getLeft();
+  const HuffmanNode *right = getRight();
+
+  if (left->hasChar(ch))
+    return left;
+
+  if (right->hasChar(ch))
+    return right;
+
+  return nullptr;
+}
+
+HuffmanNode *HuffmanNode::fetchLeft() {
   if (_left == nullptr)
     _left = new HuffmanNode(this);
 
   return _left;
 }
 
-HuffmanNode *HuffmanNode::getRight() {
+HuffmanNode *HuffmanNode::fetchRight() {
   if (_right == nullptr)
     _right = new HuffmanNode(this);
 
   return _right;
 }
 
-bool HuffmanNode::isEmpty() { return _charset.size() == 0; }
-bool HuffmanNode::isLeaf() {
-  HuffmanNode *left = getLeft();
-  HuffmanNode *right = getRight();
+HuffmanNode *HuffmanNode::fetchChild(bool right) {
+  return right ? fetchRight() : fetchLeft();
+}
+
+bool HuffmanNode::isEmpty() const { return _charset.size() == 0; }
+bool HuffmanNode::isLeaf() const {
+  const HuffmanNode *left = getLeft();
+  const HuffmanNode *right = getRight();
   return _charset.size() == 1 && left->isEmpty() && right->isEmpty();
 }
-bool HuffmanNode::isRoot() { return _parent == nullptr; }
+bool HuffmanNode::isRoot() const { return _parent == nullptr; }

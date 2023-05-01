@@ -20,10 +20,10 @@ const std::vector<unsigned char> &DataWriter::getHuffmanCode(unsigned char ch) {
 
 std::vector<unsigned char> DataWriter::findHuffmanCode(unsigned char ch) {
   std::vector<unsigned char> code;
-  HuffmanNode *node = _tree.getRootNode();
+  const HuffmanNode *node = _tree.getRootNode();
 
   while (!node->isEmpty()) {
-    HuffmanNode *next = node->select(ch);
+    const HuffmanNode *next = node->select(ch);
 
     if (next == nullptr)
       throw EncodingException("could not get next bit for a symbol "

@@ -35,28 +35,32 @@ public:
              bool isLeft = false) const;
   bool tryInsertLeftmost(unsigned char ch, int len);
 
-  HuffmanNode *getLeft();
-  HuffmanNode *getRight();
-  HuffmanNode *getParent();
-  HuffmanNode *getChild(bool right);
-  HuffmanNode *select(unsigned char ch);
+  const HuffmanNode *getLeft() const;
+  const HuffmanNode *getRight() const;
+  const HuffmanNode *getParent() const;
+  const HuffmanNode *getChild(bool right) const;
+  const HuffmanNode *select(unsigned char ch) const;
 
-  std::set<unsigned char> getCharset();
+  HuffmanNode *fetchLeft();
+  HuffmanNode *fetchRight();
+  HuffmanNode *fetchChild(bool right);
 
-  bool hasChar(unsigned char ch);
+  std::set<unsigned char> getCharset() const;
 
-  unsigned char getChar();
+  bool hasChar(unsigned char ch) const;
+
+  unsigned char getChar() const;
   void setChar(unsigned char ch);
   void initChar(unsigned char ch);
   void clearChar();
 
-  int getCount();
+  int getCount() const;
   void setCount(int count);
   void incCount();
 
-  bool isEmpty();
-  bool isLeaf();
-  bool isRoot();
+  bool isEmpty() const;
+  bool isLeaf() const;
+  bool isRoot() const;
 };
 
 #endif

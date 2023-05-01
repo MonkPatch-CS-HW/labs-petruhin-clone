@@ -10,7 +10,7 @@ DataReader::DataReader(HuffmanTree &tree, BitReader reader)
     : _tree(tree), _reader(reader) {}
 
 unsigned char DataReader::readChar() {
-  HuffmanNode *node = _tree.getRootNode();
+  const HuffmanNode *node = _tree.getRootNode();
 
   std::stringstream code;
 

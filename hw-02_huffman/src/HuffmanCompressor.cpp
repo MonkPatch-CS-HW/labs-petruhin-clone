@@ -9,7 +9,7 @@
 #include "HuffmanTree.hpp"
 
 HuffmanCompressor::CompressorStats
-HuffmanCompressor::compress(std::istream &in, std::ostream &out) {
+HuffmanCompressor::compress(std::istream &in, std::ostream &out) const {
   in.seekg(0, std::ios::end);
   size_t size = in.tellg();
   in.seekg(0, std::ios::beg);
@@ -22,9 +22,9 @@ HuffmanCompressor::compress(std::istream &in, std::ostream &out) {
 }
 
 HuffmanCompressor::CompressorStats
-HuffmanCompressor::compress(std::vector<char> &buffer, std::ostream &out) {
+HuffmanCompressor::compress(std::vector<char> &buffer, std::ostream &out) const {
   HuffmanTree ht = HuffmanTree::fromBuffer(buffer);
-  std::vector<unsigned char> table = ht.normalize();
+  const std::vector<unsigned char> &table = ht.getTable();
 
   size_t size = buffer.size();
 
@@ -45,7 +45,7 @@ HuffmanCompressor::compress(std::vector<char> &buffer, std::ostream &out) {
 }
 
 HuffmanCompressor::CompressorStats
-HuffmanCompressor::decompress(std::istream &in, std::ostream &out) {
+HuffmanCompressor::decompress(std::istream &in, std::ostream &out) const {
   std::vector<char> buffer;
   CompressorStats result = decompress(in, buffer);
 
@@ -56,7 +56,7 @@ HuffmanCompressor::decompress(std::istream &in, std::ostream &out) {
 }
 
 HuffmanCompressor::CompressorStats
-HuffmanCompressor::decompress(std::istream &in, std::vector<char> &buffer) {
+HuffmanCompressor::decompress(std::istream &in, std::vector<char> &buffer) const {
   size_t size;
   std::vector<unsigned char> table(256);
 

@@ -4,6 +4,7 @@
 
 #include "CliArguments.hpp"
 #include "HuffmanCompressor.hpp"
+#include "HuffmanTree.hpp"
 
 using namespace std;
 

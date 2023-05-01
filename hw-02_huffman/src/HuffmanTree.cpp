@@ -9,10 +9,21 @@
 #include "HuffmanNode.hpp"
 #include "HuffmanTree.hpp"
 
-HuffmanTree::HuffmanTree(HuffmanNode *rootNode) : _rootNode(rootNode) {}
+HuffmanTree::HuffmanTree(HuffmanNode *rootNode)
+    : _rootNode(rootNode), _consistent(false) {
+  normalize();
+}
 
 HuffmanTree::HuffmanTree(const HuffmanTree &other)
     : HuffmanTree(nodeFromTable(other.generateTable())) {}
+
+HuffmanTree &HuffmanTree::operator=(HuffmanTree &other) {
+  delete this->_rootNode;
+
+  this->_rootNode = nodeFromTable(other.generateTable());
+
+  return *this;
+}
 
 HuffmanTree::~HuffmanTree() { delete _rootNode; }
 
@@ -38,7 +49,7 @@ findToCombine(std::set<HuffmanNode *> nodeset) {
   return std::pair<HuffmanNode *, HuffmanNode *>(smallest, secondSmallest);
 }
 
-bool HuffmanTree::hasChar(unsigned char ch) {
+bool HuffmanTree::hasChar(unsigned char ch) const {
   return this->_rootNode->hasChar(ch);
 }
 
@@ -50,7 +61,7 @@ HuffmanTree HuffmanTree::fromBuffer(const std::vector<char> &buffer) {
     if (nodemap.count(ch)) {
       nodemap[ch]->incCount();
     } else {
-      std::set<unsigned char> charset{static_cast<unsigned char>(ch)};
+      std::set<unsigned char> charset{ch};
       nodemap[ch] = new HuffmanNode(charset, 1);
     }
   }
@@ -80,25 +91,18 @@ HuffmanTree HuffmanTree::fromTable(const std::vector<unsigned char> &table) {
   return HuffmanTree::nodeFromTable(table);
 }
 
-HuffmanNode *HuffmanTree::nodeFromTable(const std::vector<unsigned char> &table) {
-  // std::chrono::time_point<std::chrono::system_clock> now =
-  //     std::chrono::system_clock::now();
-
+HuffmanNode *
+HuffmanTree::nodeFromTable(const std::vector<unsigned char> &table) {
   HuffmanNode *rootNode = new HuffmanNode(nullptr);
-  for (int i = 0; i < 256; i++) {
+  for (int i = 0; i < 256; i++)
     rootNode->tryInsertLeftmost(i, table[i]);
-  }
 
-  // std::chrono::time_point<std::chrono::system_clock> end =
-  //     std::chrono::system_clock::now();
-  // std::cout << "nodeFromTable() took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - now).count()
-  //           << "ms of time" << std::endl;
   return rootNode;
 }
 
 int HuffmanTree::getCodeLen(unsigned char ch) const {
   int len = 0;
-  for (HuffmanNode *node = _rootNode; node != nullptr;
+  for (const HuffmanNode *node = _rootNode; node != nullptr;
        node = node->select(ch), len++) {
 
     if (node->isLeaf() && node->getChar() == ch)
@@ -114,12 +118,28 @@ std::vector<unsigned char> HuffmanTree::normalize() {
   delete _rootNode;
   _rootNode = nodeFromTable(table);
 
+  _consistent = true;
+
   return table;
 }
 
-HuffmanNode *HuffmanTree::getRootNode() { return _rootNode; }
+const std::vector<unsigned char> &HuffmanTree::getTable() {
+  if (!_consistent) {
+    normalize();
+    _table = generateTable();
+  }
 
-void HuffmanTree::printTable() {
+  return _table;
+}
+
+const HuffmanNode *HuffmanTree::getRootNode() {
+  if (!_consistent)
+    normalize();
+
+  return _rootNode;
+}
+
+void HuffmanTree::printTable() const {
   std::vector<unsigned char> table = generateTable();
 
   std::cout << "unsigned char table[256] = { ";
@@ -131,20 +151,18 @@ void HuffmanTree::printTable() {
 }
 
 std::vector<unsigned char> HuffmanTree::generateTable() const {
-  // std::chrono::time_point<std::chrono::system_clock> now =
-  //     std::chrono::system_clock::now();
   std::vector<unsigned char> table(256);
   for (int i = 0; i < 256; i++)
     table[i] = getCodeLen(i);
-  // std::chrono::time_point<std::chrono::system_clock> end =
-  //     std::chrono::system_clock::now();
-  // std::cout << "generateTable() took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - now).count()
-  //           << "ms of time" << std::endl;
+
   return table;
 }
 
 bool HuffmanTree::tryInsertLeftmost(unsigned char ch, int len) {
   bool result = _rootNode->tryInsertLeftmost(ch, len);
+
+  if (result)
+    _consistent = false;
 
   return result;
 }
