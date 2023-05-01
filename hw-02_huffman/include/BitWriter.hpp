@@ -6,7 +6,7 @@
 
 class BitWriter {
 private:
-  std::ofstream &_fout;
+  std::ostream &_out;
   int _bitsLeft;
   unsigned char _chunk;
   size_t _bytesWritten;
@@ -14,13 +14,11 @@ private:
   void writeNext();
 
 public:
-  BitWriter(std::ofstream &fout);
+  BitWriter(std::ostream &out);
 
   void writeBit(unsigned char bit);
 
   size_t flush();
-
-  void close();
 };
 
 #endif

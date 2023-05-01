@@ -5,13 +5,13 @@
 #include "BitWriter.hpp"
 #include "exceptions.hpp"
 
-BitWriter::BitWriter(std::ofstream &fout)
-    : _fout(fout), _bitsLeft(0), _chunk(0), _bytesWritten(0) {}
+BitWriter::BitWriter(std::ostream &out)
+    : _out(out), _bitsLeft(0), _chunk(0), _bytesWritten(0) {}
 
 void BitWriter::writeNext() {
-  _fout.write((char *)&_chunk, sizeof(unsigned char));
+  _out.write((char *)&_chunk, sizeof(unsigned char));
 
-  if (!_fout.good())
+  if (!_out.good())
     throw IOException("could not write chunk");
 
   _bitsLeft = 0;
@@ -37,5 +37,3 @@ void BitWriter::writeBit(unsigned char bit) {
   if (_bitsLeft == 0)
     writeNext();
 }
-
-void BitWriter::close() { _fout.close(); }

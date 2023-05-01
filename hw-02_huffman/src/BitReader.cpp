@@ -1,16 +1,17 @@
 #include <exception>
+#include <fstream>
 #include <iostream>
 
 #include "BitReader.hpp"
 #include "exceptions.hpp"
 
-BitReader::BitReader(std::ifstream &fin)
-    : _fin(fin), _bitsLeft(0), _chunk(0), _bytesRead(0) {}
+BitReader::BitReader(std::istream &in)
+    : _in(in), _bitsLeft(0), _chunk(0), _bytesRead(0) {}
 
 void BitReader::readNext() {
-  _fin.read((char *)&_chunk, sizeof(unsigned char));
+  _in.read((char *)&_chunk, sizeof(unsigned char));
 
-  if (!_fin.good())
+  if (!_in.good())
     throw IOException("could not read chunk");
 
   _bitsLeft = 0;
@@ -35,5 +36,3 @@ unsigned char BitReader::readBit() {
 
   return (_chunk >> _bitsLeft) & 0b1;
 }
-
-void BitReader::close() { _fin.close(); }

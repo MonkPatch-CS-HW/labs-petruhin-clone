@@ -17,3 +17,5 @@ EncodingException::EncodingException(const char *what, unsigned char ch)
 }
 
 const char *EncodingException::what() const noexcept { return _str.c_str(); }
+
+DecodingException::DecodingException(const char *what) : std::logic_error(what) {}

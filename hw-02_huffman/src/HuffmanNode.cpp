@@ -68,19 +68,6 @@ void HuffmanNode::print(std::ostream &out, std::string prefix,
     _right->print(out, prefix + (isLeft ? "│   " : "    "), false);
 }
 
-void HuffmanNode::print(std::ofstream &out, std::string prefix,
-                        bool isLeft) const {
-  out << prefix;
-  out << (isLeft ? "├──" : "└──");
-  std::string str = charsetString();
-  out << str << " (" << _count << ")" << std::endl;
-
-  if (_left != nullptr)
-    _left->print(out, prefix + (isLeft ? "│   " : "    "), true);
-  if (_right != nullptr)
-    _right->print(out, prefix + (isLeft ? "│   " : "    "), false);
-}
-
 HuffmanNode *HuffmanNode::getChild(bool right) {
   return right ? getRight() : getLeft();
 }

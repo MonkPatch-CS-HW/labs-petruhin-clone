@@ -33,8 +33,6 @@ public:
   void print(std::string prefix = "", bool isLeft = false) const;
   void print(std::ostream &out, std::string prefix = "",
              bool isLeft = false) const;
-  void print(std::ofstream &out, std::string prefix = "",
-             bool isLeft = false) const;
   bool tryInsertLeftmost(unsigned char ch, int len);
 
   HuffmanNode *getLeft();

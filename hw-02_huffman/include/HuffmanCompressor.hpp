@@ -12,11 +12,11 @@ public:
     size_t metadataSize;
   };
 
-  CompressorStats compress(std::ifstream &fin, std::ofstream &fout);
-  CompressorStats compress(std::vector<char> &buffer, std::ofstream &fout);
+  CompressorStats compress(std::istream &in, std::ostream &out);
+  CompressorStats compress(std::vector<char> &buffer, std::ostream &out);
 
-  CompressorStats decompress(std::ifstream &fin, std::vector<char> &buffer);
-  CompressorStats decompress(std::ifstream &fin, std::ofstream &fout);
+  CompressorStats decompress(std::istream &in, std::vector<char> &buffer);
+  CompressorStats decompress(std::istream &in, std::ostream &out);
 };
 
 #endif

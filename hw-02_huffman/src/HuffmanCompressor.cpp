@@ -9,29 +9,29 @@
 #include "HuffmanTree.hpp"
 
 HuffmanCompressor::CompressorStats
-HuffmanCompressor::compress(std::ifstream &fin, std::ofstream &fout) {
-  fin.seekg(0, std::ios::end);
-  size_t size = fin.tellg();
-  fin.seekg(0, std::ios::beg);
+HuffmanCompressor::compress(std::istream &in, std::ostream &out) {
+  in.seekg(0, std::ios::end);
+  size_t size = in.tellg();
+  in.seekg(0, std::ios::beg);
 
   std::vector<char> buffer(size);
-  if (!fin.read(buffer.data(), size))
+  if (!in.read(buffer.data(), size))
     throw IOException("could not read from file input");
 
-  return compress(buffer, fout);
+  return compress(buffer, out);
 }
 
 HuffmanCompressor::CompressorStats
-HuffmanCompressor::compress(std::vector<char> &buffer, std::ofstream &fout) {
+HuffmanCompressor::compress(std::vector<char> &buffer, std::ostream &out) {
   HuffmanTree ht = HuffmanTree::fromBuffer(buffer);
   std::vector<char> table = ht.normalize();
 
   size_t size = buffer.size();
 
-  fout.write((char *)table.data(), 256);
-  fout.write((char *)&size, sizeof(size_t));
+  out.write((char *)table.data(), 256);
+  out.write((char *)&size, sizeof(size_t));
 
-  BitWriter bw(fout);
+  BitWriter bw(out);
   DataWriter dw(ht, bw);
 
   for (size_t i = 0; i < size; i++)
@@ -45,29 +45,29 @@ HuffmanCompressor::compress(std::vector<char> &buffer, std::ofstream &fout) {
 }
 
 HuffmanCompressor::CompressorStats
-HuffmanCompressor::decompress(std::ifstream &fin, std::ofstream &fout) {
+HuffmanCompressor::decompress(std::istream &in, std::ostream &out) {
   std::vector<char> buffer;
-  CompressorStats result = decompress(fin, buffer);
+  CompressorStats result = decompress(in, buffer);
 
-  if (!fout.write(buffer.data(), buffer.size()))
+  if (!out.write(buffer.data(), buffer.size()))
     throw IOException("could not write to file output");
 
   return result;
 }
 
 HuffmanCompressor::CompressorStats
-HuffmanCompressor::decompress(std::ifstream &fin, std::vector<char> &buffer) {
+HuffmanCompressor::decompress(std::istream &in, std::vector<char> &buffer) {
   size_t size;
   std::vector<char> table(256);
 
-  fin.read((char *)table.data(), 256);
-  fin.read((char *)&size, sizeof(size_t));
+  in.read((char *)table.data(), 256);
+  in.read((char *)&size, sizeof(size_t));
 
   buffer = std::vector<char>(size);
 
   HuffmanTree ht = HuffmanTree::fromTable(table);
 
-  BitReader br(fin);
+  BitReader br(in);
   DataReader dr(ht, br);
 
   for (size_t i = 0; i < size; i++)

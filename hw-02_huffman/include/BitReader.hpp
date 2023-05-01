@@ -6,7 +6,7 @@
 
 class BitReader {
 private:
-  std::ifstream &_fin;
+  std::istream &_in;
   int _bitsLeft;
   unsigned char _chunk;
   size_t _bytesRead;
@@ -14,13 +14,11 @@ private:
   void readNext();
 
 public:
-  BitReader(std::ifstream &fin);
+  BitReader(std::istream &in);
 
   unsigned char readBit();
 
   size_t flush();
-
-  void close();
 };
 
 #endif
