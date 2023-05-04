@@ -33,6 +33,9 @@ HuffmanNode::~HuffmanNode() {
 }
 
 HuffmanNode *HuffmanNode::join(HuffmanNode *other) {
+  if (!isRoot() || !other->isRoot())
+    throw HuffmanNodeException("cannot join nodes which are not both root nodes");
+
   std::set<unsigned char> newset;
   std::merge(_charset.begin(), _charset.end(), other->_charset.begin(),
              other->_charset.end(), std::inserter(newset, newset.begin()));
