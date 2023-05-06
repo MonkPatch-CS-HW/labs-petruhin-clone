@@ -9,8 +9,8 @@
 #include "HuffmanNode.hpp"
 #include "HuffmanTree.hpp"
 
-HuffmanTree::HuffmanTree(HuffmanNode *rootNode, bool consistent)
-    : _rootNode(rootNode), _consistent(consistent) {
+HuffmanTree::HuffmanTree(HuffmanNode *rootNode)
+    : _rootNode(rootNode) {
   normalize();
 }
 
@@ -88,7 +88,7 @@ HuffmanTree HuffmanTree::fromBuffer(const std::vector<char> &buffer) {
 }
 
 HuffmanTree HuffmanTree::fromTable(const std::vector<unsigned char> &table) {
-  return HuffmanTree(HuffmanTree::nodeFromTable(table), true);
+  return HuffmanTree(HuffmanTree::nodeFromTable(table));
 }
 
 HuffmanNode *
@@ -117,21 +117,13 @@ void HuffmanTree::normalize() {
 
   delete _rootNode;
   _rootNode = nodeFromTable(_table);
-
-  _consistent = true;
 }
 
-const std::vector<unsigned char> &HuffmanTree::getTable() {
-  if (!_consistent)
-    normalize();
-
+const std::vector<unsigned char> &HuffmanTree::getTable() const {
   return _table;
 }
 
-const HuffmanNode *HuffmanTree::getRootNode() {
-  if (!_consistent)
-    normalize();
-
+const HuffmanNode *HuffmanTree::getRootNode() const {
   return _rootNode;
 }
 

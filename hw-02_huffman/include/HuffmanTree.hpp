@@ -15,7 +15,7 @@ private:
   bool tryInsertLeftmost(unsigned char ch, int len);
   static HuffmanNode *nodeFromTable(const std::vector<unsigned char> &table);
 
-  HuffmanTree(HuffmanNode *rootNode = new HuffmanNode(nullptr), bool consistent = false);
+  HuffmanTree(HuffmanNode *rootNode = new HuffmanNode(nullptr));
   void normalize();
   std::vector<unsigned char> generateTable() const;
 
@@ -30,11 +30,11 @@ public:
 
   bool hasChar(unsigned char ch) const;
 
-  const HuffmanNode *getRootNode();
+  const HuffmanNode *getRootNode() const;
 
   int getCodeLen(unsigned char ch) const;
 
-  const std::vector<unsigned char> &getTable();
+  const std::vector<unsigned char> &getTable() const;
 
   void printTable() const;
 };
