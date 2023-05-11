@@ -17,7 +17,7 @@ template <typename T, typename F> class where_enumerator;
 
 template <typename T> class enumerator {
 public:
-  virtual T operator*() = 0; // Получает текущий элемент.
+  virtual const T &operator*() = 0; // Получает текущий элемент.
   virtual enumerator<T> &operator++() = 0; // Переход к следующему элементу
   virtual operator bool() = 0; // Возвращает true, если есть текущий элемент
 
@@ -69,7 +69,7 @@ class range_enumerator : public enumerator<T> {
 public:
   range_enumerator(Iter begin, Iter end) : begin_(begin), end_(end) {}
 
-  T operator*() override { return *begin_; }
+  const T &operator*() override { return *begin_; }
 
   range_enumerator<T, Iter> &operator++() override {
     if (!*this)
@@ -94,7 +94,7 @@ public:
       ++parent_;
   }
 
-  T operator*() override { return *parent_; }
+  const T &operator*() override { return *parent_; }
 
   drop_enumerator<T> &operator++() override {
     if (!*this)
@@ -117,7 +117,7 @@ public:
   take_enumerator(enumerator<T> &parent, int count)
       : parent_(parent), count_(count) {}
 
-  T operator*() override { return *parent_; }
+  const T &operator*() override { return *parent_; }
 
   take_enumerator<T> &operator++() override {
     if (!*this)
@@ -140,15 +140,23 @@ template <typename T, typename U, typename F>
 class select_enumerator : public enumerator<U> {
 public:
   select_enumerator(enumerator<T> &parent, F func)
-      : parent_(parent), func_(func) {}
+      : parent_(parent), func_(func), changed_(true) {}
 
-  U operator*() override { return func_(*parent_); }
+  const U &operator*() override {
+    if (changed_) {
+      value_ = func_(*parent_);
+      changed_ = false;
+    }
+
+    return value_;
+  }
 
   select_enumerator<T, U, F> &operator++() override {
     if (!*this)
       return *this;
 
     ++parent_;
+    changed_ = true;
 
     return *this;
   }
@@ -158,6 +166,8 @@ public:
 private:
   enumerator<T> &parent_;
   F func_;
+  U value_;
+  bool changed_;
 };
 
 template <typename T, typename F>
@@ -169,7 +179,7 @@ public:
       valid_ = false;
   }
 
-  T operator*() override { return *parent_; }
+  const T &operator*() override { return *parent_; }
 
   until_enumerator<T, F> &operator++() override {
     if (!*this)
@@ -200,7 +210,7 @@ public:
       ++*this;
   }
 
-  T operator*() override { return *parent_; }
+  const T &operator*() override { return *parent_; }
 
   where_enumerator<T, F> &operator++() override {
     while (true) {
