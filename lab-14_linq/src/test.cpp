@@ -67,10 +67,23 @@ void example4() {
   assert(oss.str() == "2\n4\n");
 }
 
+void test_until() {
+  std::vector<int> vec(100);
+  for (int i = 0; i < 100; i++) vec[i] = i;
+
+  std::ostream_iterator<double> out(std::cout, "\n");
+  std::vector<int> result = from(vec.begin(), vec.end()).drop(1).until([](int x) { return x > 5; }).to_vector();
+
+  std::vector<int> expected = { 1, 2, 3, 4, 5 };
+
+  assert(expected == vec);
+}
+
 int main() {
   example1();
   example2();
   example3();
   example4();
+  test_until();
   return 0;
 }

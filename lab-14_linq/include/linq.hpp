@@ -157,7 +157,10 @@ template <typename T, typename F>
 class until_enumerator : public enumerator<T> {
 public:
   until_enumerator(enumerator<T> &parent, F predicate)
-      : parent_(parent), predicate_(predicate), valid_(!predicate_(*parent_)) {}
+      : parent_(parent), predicate_(predicate), valid_(true) {
+    if (*this && predicate_(*parent_))
+      valid_ = false;
+  }
 
   T operator*() override { return *parent_; }
 
@@ -165,7 +168,7 @@ public:
     if (*this)
       ++parent_;
 
-    if (predicate_(*parent_))
+    if (*this && predicate_(*parent_))
       valid_ = false;
 
     return *this;
@@ -193,9 +196,6 @@ public:
   where_enumerator<T, F> &operator++() override {
     while (*this && !predicate_(*++parent_))
       ;
-    // do {
-    //   ++parent_;
-    // } while (*this && !predicate_(**this));
 
     return *this;
   }
