@@ -140,7 +140,7 @@ template <typename T, typename U, typename F>
 class select_enumerator : public enumerator<U> {
 public:
   select_enumerator(enumerator<T> &parent, F func)
-      : parent_(parent), func_(func), changed_(true) {}
+      : parent_(parent), func_(std::move(func)), changed_(true) {}
 
   const U &operator*() override {
     if (changed_) {
@@ -174,7 +174,7 @@ template <typename T, typename F>
 class until_enumerator : public enumerator<T> {
 public:
   until_enumerator(enumerator<T> &parent, F predicate)
-      : parent_(parent), predicate_(predicate), valid_(true) {
+      : parent_(parent), predicate_(std::move(predicate)), valid_(true) {
     if (*this && predicate_(*parent_))
       valid_ = false;
   }
@@ -205,7 +205,7 @@ template <typename T, typename F>
 class where_enumerator : public enumerator<T> {
 public:
   where_enumerator(enumerator<T> &parent, F predicate)
-      : parent_(parent), predicate_(predicate) {
+      : parent_(parent), predicate_(std::move(predicate)) {
     if (!predicate_(*parent_))
       ++*this;
   }
