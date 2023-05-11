@@ -57,7 +57,7 @@ public:
 
   template <typename Iter> void copy_to(Iter it) {
     while (*this) {
-      *it = **this;
+      *it = std::move((T)**this);
       ++*this;
       ++it;
     }
