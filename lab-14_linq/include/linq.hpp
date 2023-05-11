@@ -48,7 +48,8 @@ public:
   std::vector<T> to_vector() {
     std::vector<T> res;
     while (*this) {
-      res.push_back(std::move((T) * *this));
+      res.reserve(res.size() + 1);
+      res.push_back(* *this);
       ++*this;
     }
 

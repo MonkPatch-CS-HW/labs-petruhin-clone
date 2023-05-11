@@ -1,24 +1,37 @@
 #include "linq.hpp"
-#include <math.h>
 #include <assert.h>
-#include <vector>
-#include <sstream>
 #include <iterator>
+#include <math.h>
+#include <sstream>
+#include <vector>
+#include <stdexcept>
 
 using linq::from;
 
+class Custom {
+public:
+  Custom(int i) : i_(i) {}
+  Custom(const Custom &other) : i_(other.i_) {
+    std::cerr << "Unexpected copy" << std::endl;
+  }
+  Custom(const Custom &&other) : i_(other.i_) { std::cerr << "Move" << std::endl; }
+  int i_;
+
+  operator int() { return i_; }
+};
+
 void example1() {
-  int xs[] = { 1, 2, 3, 4, 5 };
+  int xs[] = {1, 2, 3, 4, 5};
 
   std::vector<int> res =
-    from(xs, xs + 5)  // Взять элементы xs
-    .select([](int x) { return x * x; })  // Возвести в квадрат
-    .where_neq(25)    // Оставить только значения != 25
-    .where([](int x) { return x > 3; })   // Оставить только значения > 3
-    .drop(2)          // Убрать два элемента из начала
-    .to_vector();     // Преобразовать результат в вектор
+      from(xs, xs + 5)                         // Взять элементы xs
+          .select([](int x) { return x * x; }) // Возвести в квадрат
+          .where_neq(25) // Оставить только значения != 25
+          .where([](int x) { return x > 3; }) // Оставить только значения > 3
+          .drop(2) // Убрать два элемента из начала
+          .to_vector(); // Преобразовать результат в вектор
 
-  std::vector<int> expected = { 16 };
+  std::vector<int> expected = {16};
   assert(res == expected);
 }
 
@@ -27,12 +40,12 @@ void example2() {
   std::istream_iterator<int> in(ss), eof;
 
   std::vector<int> res =
-    from(in, eof)  // Взять числа из входного потока
-    .take(4)       // Не более четырёх чисел
-    .until_eq(-1)  // Перестать читать после прочтения -1
-    .to_vector();  // Получить список считанных чисел
+      from(in, eof) // Взять числа из входного потока
+          .take(4)  // Не более четырёх чисел
+          .until_eq(-1) // Перестать читать после прочтения -1
+          .to_vector(); // Получить список считанных чисел
 
-  std::vector<int> expected = { 1, 2, 3 };
+  std::vector<int> expected = {1, 2, 3};
   assert(expected == res);
 
   int remaining;
@@ -41,12 +54,12 @@ void example2() {
 }
 
 void example3() {
-  int xs[] = { 1, 2, 3, 4, 5 };
+  int xs[] = {1, 2, 3, 4, 5};
 
   std::vector<double> res =
-    from(xs, xs + 5)  // Взять элементы xs
-    .select<double>([](int x) { return sqrt(x); })  // Извлечь корень
-    .to_vector();     // Преобразовать результат в вектор
+      from(xs, xs + 5) // Взять элементы xs
+          .select<double>([](int x) { return sqrt(x); }) // Извлечь корень
+          .to_vector(); // Преобразовать результат в вектор
 
   assert(res.size() == 5);
   for (std::size_t i = 0; i < res.size(); i++) {
@@ -60,11 +73,34 @@ void example4() {
   std::istream_iterator<int> in(iss), eof;
   std::ostream_iterator<double> out(oss, "\n");
 
-  from(in, eof)    // Взять числа из входного потока
-  .select([](int x) { return static_cast<int>(sqrt(x) + 1e-6); })  // Извлечь из каждого корень
-  .copy_to(out);  // Вывести на экран
+  from(in, eof) // Взять числа из входного потока
+      .select([](int x) {
+        return static_cast<int>(sqrt(x) + 1e-6);
+      })             // Извлечь из каждого корень
+      .copy_to(out); // Вывести на экран
 
   assert(oss.str() == "2\n4\n");
+}
+
+void example5() {
+  std::stringstream oss;
+  std::ostream_iterator<int> out(oss, ";");
+
+  std::vector<Custom> a;
+  a.reserve(2);
+  a.emplace_back(0);
+  a.emplace_back(1);
+
+  std::vector<Custom> b =
+      from(a.begin(), a.end()) // Взять числа из входного потока
+          .where([](const Custom &c) { return c.i_ == 0; })
+          .to_vector();
+
+  for (auto &el : b)
+    std::cout << el << std::endl;
+
+  // std::cout << oss.str() << std::endl;
+  // assert(oss.str() == "2\n4\n");
 }
 
 int main() {
@@ -72,5 +108,7 @@ int main() {
   example2();
   example3();
   example4();
+  example5();
   return 0;
 }
+
