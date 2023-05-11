@@ -206,6 +206,9 @@ class where_enumerator : public enumerator<T> {
 public:
   where_enumerator(enumerator<T> &parent, F predicate)
       : parent_(parent), predicate_(std::move(predicate)) {
+    if (!*this)
+      return;
+
     if (!predicate_(*parent_))
       ++*this;
   }
