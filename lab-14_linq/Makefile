@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -O2 -Wall -Werror -std=c++11 -Iinclude -std=c++17
+CXXFLAGS = -O0 -g3 -Wall -Werror -std=c++11 -Iinclude -std=c++17
 LDFLAGS = 
 
 EXE = lab-14_linq

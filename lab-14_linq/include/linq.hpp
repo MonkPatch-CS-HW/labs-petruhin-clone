@@ -72,8 +72,10 @@ public:
   T operator*() override { return *begin_; }
 
   range_enumerator<T, Iter> &operator++() override {
-    if (*this)
-      ++begin_;
+    if (!*this)
+      return *this;
+
+    ++begin_;
 
     return *this;
   }
@@ -95,8 +97,10 @@ public:
   T operator*() override { return *parent_; }
 
   drop_enumerator<T> &operator++() override {
-    if (*this)
-      ++parent_;
+    if (!*this)
+      return *this;
+
+    ++parent_;
 
     return *this;
   }
@@ -116,10 +120,11 @@ public:
   T operator*() override { return *parent_; }
 
   take_enumerator<T> &operator++() override {
-    if (*this) {
-      ++parent_;
-      --count_;
-    }
+    if (!*this)
+      return *this;
+
+    ++parent_;
+    --count_;
 
     return *this;
   }
@@ -140,8 +145,10 @@ public:
   U operator*() override { return func_(*parent_); }
 
   select_enumerator<T, U, F> &operator++() override {
-    if (*this)
-      ++parent_;
+    if (!*this)
+      return *this;
+
+    ++parent_;
 
     return *this;
   }
@@ -165,8 +172,10 @@ public:
   T operator*() override { return *parent_; }
 
   until_enumerator<T, F> &operator++() override {
-    if (*this)
-      ++parent_;
+    if (!*this)
+      return *this;
+
+    ++parent_;
 
     if (*this && predicate_(*parent_))
       valid_ = false;
@@ -194,8 +203,15 @@ public:
   T operator*() override { return *parent_; }
 
   where_enumerator<T, F> &operator++() override {
-    while (*this && !predicate_(*++parent_))
-      ;
+    while (true) {
+      if (!*this)
+        break;
+
+      ++parent_;
+
+      if (*this && predicate_(*parent_))
+        break;
+    }
 
     return *this;
   }
