@@ -12,9 +12,10 @@ class Custom {
 public:
   Custom(int i) : i_(i) {}
   Custom(const Custom &other) : i_(other.i_) {
+    // throw std::runtime_error("fuck");
     std::cerr << "Unexpected copy" << std::endl;
   }
-  Custom(const Custom &&other) : i_(other.i_) { std::cerr << "Move" << std::endl; }
+  Custom(Custom &&other) : i_(other.i_) { std::cerr << "Move" << std::endl; }
   int i_;
 
   operator int() { return i_; }
@@ -87,13 +88,22 @@ void example5() {
   std::ostream_iterator<int> out(oss, ";");
 
   std::vector<Custom> a;
-  a.reserve(2);
+  a.reserve(11);
   a.emplace_back(0);
   a.emplace_back(1);
+  a.emplace_back(2);
+  a.emplace_back(3);
+  a.emplace_back(4);
+  a.emplace_back(5);
+  a.emplace_back(6);
+  a.emplace_back(7);
+  a.emplace_back(8);
+  a.emplace_back(9);
+  a.emplace_back(10);
 
   std::vector<Custom> b =
       from(a.begin(), a.end()) // Взять числа из входного потока
-          .where([](const Custom &c) { return c.i_ == 0; })
+          .where([](const Custom &c) { return c.i_ % 2 == 0; })
           .to_vector();
 
   for (auto &el : b)

@@ -26,11 +26,11 @@ public:
   auto take(int count) { return take_enumerator<T>(*this, count); }
 
   template <typename U = T, typename F> auto select(F func) {
-    return select_enumerator<T, U, F>(*this, func);
+    return select_enumerator<T, U, F>(*this, std::move(func));
   }
 
   template <typename F> auto until(F predicate) {
-    return until_enumerator<T, F>(*this, predicate);
+    return until_enumerator<T, F>(*this, std::move(predicate));
   }
 
   auto until_eq(T elem) {
@@ -38,7 +38,7 @@ public:
   }
 
   template <typename F> auto where(F predicate) {
-    return where_enumerator<T, F>(*this, predicate);
+    return where_enumerator<T, F>(*this, std::move(predicate));
   }
 
   auto where_neq(T elem) {
@@ -48,8 +48,7 @@ public:
   std::vector<T> to_vector() {
     std::vector<T> res;
     while (*this) {
-      res.reserve(res.size() + 1);
-      res.push_back(* *this);
+      res.push_back(std::move((T) * *this));
       ++*this;
     }
 
